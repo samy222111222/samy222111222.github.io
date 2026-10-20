@@ -1,0 +1,2169 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElectroLogística & Suministros del Sur S.L. | Portafolio Corporativo & Sistema TMS</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Leaflet Interactive Map CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              dark: '#07162c',
+              navy: '#0B2545',
+              blue: '#134074',
+              accent: '#0096c7',
+              cyan: '#00b4d8',
+              lightCyan: '#e0f2fe',
+              eco: '#10b981',
+              ecoDark: '#047857'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .bg-grid-pattern {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(19, 64, 116, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(19, 64, 116, 0.08) 1px, transparent 1px);
+    }
+    .bg-dots {
+      background-image: radial-gradient(rgba(0, 180, 216, 0.25) 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.90);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .glass-dark {
+      background: rgba(11, 37, 69, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    #tmsMap {
+      height: 480px;
+      width: 100%;
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans selection:bg-brand-accent selection:text-white">
+
+  <!-- Header Top Bar -->
+  <div class="bg-brand-dark text-slate-300 text-xs py-2 px-4 border-b border-brand-blue/30">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center space-x-4">
+        <span class="inline-flex items-center text-emerald-400 font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping mr-2"></span>
+          Cerebro Operativo TMS SaaS Activo 24/7
+        </span>
+        <span class="hidden md:inline text-slate-400">|</span>
+        <span class="hidden md:inline"><i class="fa-solid fa-location-dot text-brand-cyan mr-1"></i> Pol. Ind. Guadalhorce, C/ Esteban Salazar Chapela, Málaga</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="hidden sm:inline bg-brand-blue/40 px-2 py-0.5 rounded text-sky-200 border border-sky-400/20 font-mono">
+          <i class="fa-solid fa-bolt mr-1"></i> Práctica 1 + Práctica 2 Integrada
+        </span>
+        <a href="#operativa-tms" class="text-brand-cyan hover:text-white font-bold transition-colors">
+          <i class="fa-solid fa-network-wired mr-1"></i> Ir al Sistema TMS (Práctica 2)
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary Sticky Navbar -->
+  <nav class="sticky top-0 z-50 glass-card border-b border-slate-200 shadow-sm transition-all duration-300" id="mainNav">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        
+        <!-- Brand identity -->
+        <a href="#" class="flex items-center space-x-3 group">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-brand-navy via-brand-blue to-brand-cyan flex items-center justify-center text-white shadow-md shadow-brand-blue/20 group-hover:scale-105 transition-transform">
+            <i class="fa-solid fa-truck-bolt text-2xl"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-extrabold text-xl tracking-tight text-brand-navy">ElectroLogística</span>
+              <span class="text-xs font-semibold px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full border border-emerald-300">Sur</span>
+            </div>
+            <p class="text-[11px] font-medium text-slate-500 uppercase tracking-wider">& Suministros del Sur S.L. · Desde 2005</p>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <div class="hidden xl:flex items-center space-x-1 font-medium text-xs text-slate-600">
+          <a href="#inicio" class="px-2.5 py-2 rounded-lg hover:text-brand-blue hover:bg-slate-100/70 transition-colors">Inicio</a>
+          <a href="#operativa-tms" onclick="switchTmsTab('clientes')" class="px-3 py-2 rounded-lg bg-sky-50 text-brand-blue font-bold border border-sky-200 hover:bg-sky-100 transition-colors flex items-center gap-1.5">
+            <i class="fa-solid fa-Server text-brand-accent"></i> Práctica 2: Cerebro TMS
+          </a>
+          <a href="#flota" class="px-2.5 py-2 rounded-lg hover:text-brand-blue hover:bg-slate-100/70 transition-colors">Flota</a>
+          <a href="#retos" class="px-2.5 py-2 rounded-lg hover:text-brand-blue hover:bg-slate-100/70 transition-colors">Retos Papel</a>
+          <a href="#tecnologia" class="px-2.5 py-2 rounded-lg hover:text-brand-blue hover:bg-slate-100/70 transition-colors">Logística 4.0</a>
+          <a href="#sostenibilidad" class="px-2.5 py-2 rounded-lg hover:text-brand-blue hover:bg-slate-100/70 transition-colors">ZBE & Drones</a>
+          <a href="#simulador" class="ml-2 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-brand-blue to-brand-accent text-white font-semibold shadow-md hover:brightness-110 transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-calculator"></i>
+            <span>Simulador</span>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <div class="xl:hidden flex items-center">
+          <button id="mobileMenuBtn" aria-label="Abrir menú" class="p-2 rounded-lg text-slate-600 hover:text-brand-navy hover:bg-slate-100">
+            <i class="fa-solid fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown -->
+    <div id="mobileMenu" class="hidden xl:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-2 text-sm">
+      <a href="#inicio" class="block px-3 py-2 rounded-lg text-slate-700 font-medium hover:bg-slate-100">Inicio</a>
+      <a href="#operativa-tms" class="block px-3 py-2 rounded-lg bg-sky-50 text-brand-blue font-bold border border-sky-200">⚡ Práctica 2: Sistema Operativo TMS</a>
+      <a href="#flota" class="block px-3 py-2 rounded-lg text-slate-700 font-medium hover:bg-slate-100">Flota Especializada (Práctica 1)</a>
+      <a href="#retos" class="block px-3 py-2 rounded-lg text-slate-700 font-medium hover:bg-slate-100">Diagnóstico del Papel (Práctica 1)</a>
+      <a href="#tecnologia" class="block px-3 py-2 rounded-lg text-slate-700 font-medium hover:bg-slate-100">Matriz 4.0 IoT / e-CMR (Práctica 1)</a>
+      <a href="#sostenibilidad" class="block px-3 py-2 rounded-lg text-slate-700 font-medium hover:bg-slate-100">ZBE Málaga & Drones (Práctica 1)</a>
+      <a href="#simulador" class="block px-3 py-2.5 rounded-lg bg-brand-blue text-white font-semibold text-center mt-3">
+        <i class="fa-solid fa-satellite-dish mr-1"></i> Simulador de Cargas
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="inicio" class="relative overflow-hidden bg-gradient-to-b from-slate-900 via-brand-dark to-brand-navy text-white pt-14 pb-20 md:py-24">
+    <div class="absolute inset-0 bg-grid-pattern opacity-15"></div>
+    <div class="absolute -top-40 -right-40 w-96 h-96 bg-brand-cyan/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 left-10 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-blue/60 border border-brand-cyan/40 text-brand-cyan text-xs font-semibold uppercase tracking-wider">
+            <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span>
+            Líderes en Logística Industrial & Alta Tensión · Málaga
+          </div>
+
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
+            Transporte Crítico y Cerebro Operativo <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan to-sky-300">TMS en Tiempo Real</span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
+            Sustituimos el modelo analógico de 2005 por una <strong>arquitectura relacional TMS en la nube</strong>. Gestionamos el ciclo de vida completo de órdenes B2B, consolidación legal de cargas, ruteo dinámico GPS y albaranes digitales <strong>e-CMR</strong> con flota urbana <strong>CERO emisiones</strong>.
+          </p>
+
+          <div class="flex flex-wrap gap-3 justify-center lg:justify-start pt-2">
+            <a href="#operativa-tms" onclick="switchTmsTab('control')" class="px-6 py-3.5 rounded-xl bg-brand-cyan hover:bg-sky-400 text-brand-dark font-bold text-sm shadow-lg shadow-brand-cyan/30 hover:scale-105 transition-all flex items-center gap-2">
+              <i class="fa-solid fa-table-Columns"></i> Abrir Centro de Control TMS (Práctica 2)
+            </a>
+            <a href="#operativa-tms" onclick="switchTmsTab('clientes')" class="px-5 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-lg transition-all flex items-center gap-2">
+              <i class="fa-solid fa-file-signature"></i> Solicitar Envío B2B
+            </a>
+            <a href="#operativa-tms" onclick="switchTmsTab('rutas')" class="px-5 py-3.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white font-semibold text-sm border border-slate-700 transition-all flex items-center gap-2">
+              <i class="fa-solid fa-map-location-dot text-brand-cyan"></i> Mapa de Rutas GPS
+            </a>
+          </div>
+
+          <!-- Feature badges -->
+          <div class="pt-4 border-t border-slate-800 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-slate-300">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-database text-brand-cyan"></i>
+              <span>3 Tablas Relacionales (`BUSCARX`)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-weight-scale text-emerald-400"></i>
+              <span>20.830 kg / 95 m³ Gestionados</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved text-amber-400"></i>
+              <span>Auditoría Crítica IA & LOTT</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Interactive Preview Card -->
+        <div class="lg:col-span-5">
+          <div class="glass-dark rounded-2xl border border-brand-cyan/30 p-6 shadow-2xl relative">
+            <div class="flex justify-between items-center border-b border-slate-700/60 pb-4 mb-4">
+              <div class="flex items-center space-x-2">
+                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                <span class="text-xs font-mono text-slate-400 ml-2">TMS_RELATIONAL_CORE_v2.0</span>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 bg-emerald-500/20 text-emerald-300 rounded border border-emerald-500/30">6 ÓRDENES ACTIVAS</span>
+            </div>
+
+            <div class="space-y-4 font-mono text-xs">
+              <div class="bg-slate-900/90 rounded-xl p-4 border border-slate-800 space-y-2">
+                <div class="flex justify-between items-center text-slate-400">
+                  <span>RUTA COMARCAL CONSOLIDADA</span>
+                  <span class="text-brand-cyan">VEC-02 (9102 KVB)</span>
+                </div>
+                <div class="text-sm font-semibold text-white">Puerto de Málaga + P.I. La Ermita (Marbella)</div>
+                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-brand-accent to-emerald-400 h-full w-[62.88%] rounded-full"></div>
+                </div>
+                <div class="flex justify-between text-[11px] text-slate-400">
+                  <span>Ocupación Carga Útil: 4.150 / 6.600 kg</span>
+                  <span class="text-emerald-400 font-bold">62,88% (Legal OK)</span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3 gap-3">
+                <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 text-center">
+                  <div class="text-slate-400 text-[10px] uppercase">ORD-001 (ZBE)</div>
+                  <div class="text-sm font-bold text-emerald-400 mt-0.5">Entregado</div>
+                  <div class="text-[10px] text-slate-400">VEC-01 · 280 kg</div>
+                </div>
+                <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 text-center">
+                  <div class="text-slate-400 text-[10px] uppercase">ORD-002 (Puerto)</div>
+                  <div class="text-sm font-bold text-amber-300 mt-0.5">En Ruta</div>
+                  <div class="text-[10px] text-slate-400">VEC-02 · 950 kg</div>
+                </div>
+                <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 text-center">
+                  <div class="text-slate-400 text-[10px] uppercase">ORD-003..006</div>
+                  <div class="text-sm font-bold text-sky-400 mt-0.5">Planificado</div>
+                  <div class="text-[10px] text-slate-400">19.600 kg Tot.</div>
+                </div>
+              </div>
+
+              <div class="p-3 bg-brand-blue/30 rounded-lg border border-brand-cyan/20 flex items-center space-x-3 text-slate-300">
+                <i class="fa-solid fa-code-branch text-brand-cyan text-base"></i>
+                <div class="text-[11px] leading-tight">
+                  <span class="text-white font-semibold">Automatización BUSCARX:</span> Vinculación instantánea de Clientes B2B, Ventanas Horarias y POD Digital (`e-CMR`).
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-800 flex justify-between text-[11px] text-slate-400">
+              <span>Base: Pol. Ind. Guadalhorce</span>
+              <span class="text-sky-300">Equipo: Samy · Hugo · Daniel</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- NUEVA SECCIÓN CENTRAL: PRÁCTICA 2 - EL CEREBRO OPERATIVO (TMS)        -->
+  <!-- ===================================================================== -->
+  <section id="operativa-tms" class="py-20 bg-slate-100 border-b-4 border-brand-cyan">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Encabezado de la Práctica 2 -->
+      <div class="text-center max-w-4xl mx-auto mb-10">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-navy text-brand-cyan text-xs font-mono font-bold uppercase tracking-widest shadow-sm">
+          <i class="fa-solid fa-microchip"></i> PRÁCTICA 2 · MÓDULO OPERATIVO TMS & RUTEO DINÁMICO
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-navy mt-3">
+          El Cerebro Operativo: Arquitectura TMS, Órdenes y Trazabilidad
+        </h2>
+        <p class="text-slate-600 mt-3 text-sm sm:text-base">
+          Digitalización integral del ciclo de vida del transporte B2B en <strong>ElectroLogística & Suministros del Sur S.L.</strong> Navegue por las 4 pestañas operativas exigidas para explorar el formulario de captura, las 3 tablas relacionales, el mapa interactivo de rutas y la memoria técnica con auditoría de IA.
+        </p>
+      </div>
+
+      <!-- Barra de Navegación de las 4 Pestañas Operativas (Estructura exigida por el profesor) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+        <button onclick="switchTmsTab('clientes')" id="tms-btn-clientes" class="p-4 rounded-2xl font-bold text-left transition-all bg-brand-navy text-white shadow-lg border-2 border-brand-cyan flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-brand-cyan/20 text-brand-cyan flex items-center justify-center text-lg shrink-0">
+            <i class="fa-solid fa-file-pen"></i>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-brand-cyan block">Pestaña 1 · Fase 2</span>
+            <span class="text-sm">1. Área de Clientes (Pedidos)</span>
+          </div>
+        </button>
+
+        <button onclick="switchTmsTab('control')" id="tms-btn-control" class="p-4 rounded-2xl font-bold text-left transition-all bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-slate-100 text-brand-blue flex items-center justify-center text-lg shrink-0">
+            <i class="fa-solid fa-table-list"></i>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">Pestaña 2 · Fase 1 y 3</span>
+            <span class="text-sm">2. Centro de Control TMS</span>
+          </div>
+        </button>
+
+        <button onclick="switchTmsTab('rutas')" id="tms-btn-rutas" class="p-4 rounded-2xl font-bold text-left transition-all bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-slate-100 text-emerald-600 flex items-center justify-center text-lg shrink-0">
+            <i class="fa-solid fa-route"></i>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">Pestaña 3 · Fase 4</span>
+            <span class="text-sm">3. Trazabilidad y Rutas</span>
+          </div>
+        </button>
+
+        <button onclick="switchTmsTab('memoria')" id="tms-btn-memoria" class="p-4 rounded-2xl font-bold text-left transition-all bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-slate-100 text-amber-600 flex items-center justify-center text-lg shrink-0">
+            <i class="fa-solid fa-book-journal-whills"></i>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">Pestaña 4 · Fase 3 y 5</span>
+            <span class="text-sm">4. Memoria Técnica TMS</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- PESTAÑA 1: ÁREA DE CLIENTES / SOLICITUD DE ENVÍOS (FASE 2)      -->
+      <!-- =============================================================== -->
+      <div id="tms-panel-clientes" class="tms-panel bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-xl space-y-8">
+        <div class="flex flex-wrap justify-between items-start gap-4 border-b border-slate-200 pb-6">
+          <div>
+            <span class="text-xs font-mono font-bold text-brand-accent uppercase">FASE 2 · CAPTURA DIGITAL DE ÓRDENES B2B</span>
+            <h3 class="text-2xl font-extrabold text-brand-navy mt-1">Área de Clientes / Solicitud de Envíos</h3>
+            <p class="text-sm text-slate-600 mt-1">
+              Eliminamos los pedidos telefónicos desestructurados. Al seleccionar un <strong>ID_Cliente</strong>, el sistema ejecuta automáticamente la fórmula relacional <code class="bg-slate-100 px-1.5 py-0.5 rounded text-brand-blue font-mono text-xs">=BUSCARX</code> autocompletando razón social, dirección postal y ventana horaria.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-xl font-bold border border-emerald-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-link"></i> Conectado a Tabla 3 (`Ordenes_Transporte`)
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <!-- Formulario Digital B2B Conectado al TMS -->
+          <div class="lg:col-span-8 bg-slate-50 rounded-2xl p-6 border border-slate-200">
+            <form id="b2bOrderForm" onsubmit="submitNewOrder(event)" class="space-y-5">
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-700 mb-1.5">
+                    ID Cliente B2B (Autocompletado `BUSCARX`) *
+                  </label>
+                  <select id="formClientId" onchange="autoFillClient()" required class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-brand-blue focus:outline-none">
+                    <option value="CLI-001">CLI-001 · SUMINISTROS ILUMINACIÓN CENTRO S.L.</option>
+                    <option value="CLI-002">CLI-002 · MONTAJES ELECTROMECÁNICOS PUERTO S.L.</option>
+                    <option value="CLI-003">CLI-003 · ANDALUSIÁTICA RENOVABLES S.A.</option>
+                    <option value="CLI-004">CLI-004 · INFRAESTRUCTURAS Y REDES DEL NORTE S.A.</option>
+                    <option value="CLI-005">CLI-005 · EUROELECTRICAL COMPONENTS GMBH</option>
+                    <option value="CLI-006">CLI-006 · PORTUGUESA DE TRANSFORMADORES S.A.</option>
+                    <option value="NUEVO">➕ Otro Cliente Empresarial B2B (Manual)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-700 mb-1.5">
+                    Nombre Comercial / Razón Social y CIF *
+                  </label>
+                  <input type="text" id="formCompanyName" required readonly class="w-full bg-slate-100 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-700" value="SUMINISTROS ILUMINACIÓN CENTRO S.L. (B93112233)">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="sm:col-span-2">
+                  <label class="block text-xs font-bold uppercase text-slate-700 mb-1.5">
+                    Dirección Exacta de Entrega (Autocompletada por `BUSCARX`) *
+                  </label>
+                  <input type="text" id="formAddress" required class="w-full bg-slate-100 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-700 font-mono" value="C/ CARRETERÍA 45, DISTRITO CENTRO (ZBE), 29008 MÁLAGA">
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-700 mb-1.5">
+                    Ventana Horaria Descarga *
+                  </label>
+                  <input type="text" id="formTimeWindow" required class="w-full bg-slate-100 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-bold text-brand-blue font-mono" value="08:30 - 10:30 H">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-700 mb-1.5">Fecha Requerida *</label>
+                  <input type="date" id="formDate" required value="2026-10-15" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-800">
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-700 mb-1.5">Tipo de Mercancía y Bultos *</label>
+                  <select id="formCargoType" required class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-800">
+                    <option value="8 Cajas · Focos LED e Iluminación Prof.">Cajas · Iluminación Profesional / LED</option>
+                    <option value="3 Palés · Paneles de Control Baja Tensión">Europalés · Paneles y Cuadros de Control</option>
+                    <option value="6 Palés · Inversores Solares y Cuadros">Europalés · Inversores Fotovoltaicos</option>
+                    <option value="10 Palés · Armarios Metálicos y Cableado">Europalés · Armarios y Cableado Obra Civil</option>
+                    <option value="14 Palés · Bobinas Pesadas Cobre y Transf.">Bobinas Pesadas · Cobre y Transformadores</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-700 mb-1.5">Número de Bultos / Palés *</label>
+                  <input type="text" id="formPackages" required placeholder="Ej. 4 Palés / 8 Cajas" value="4 Palés" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-800">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-700 mb-1.5">Peso Real Total (kg) *</label>
+                  <input type="number" id="formWeight" required min="1" max="24000" value="850" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-mono text-slate-800">
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-700 mb-1.5">Volumen Estimado (m³) *</label>
+                  <input type="number" step="0.1" id="formVolume" required min="0.1" max="90" value="5.4" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-mono text-slate-800">
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-700 mb-1.5">Requerimiento Especial *</label>
+                  <select id="formSpecialReq" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-800">
+                    <option value="Acceso ZBE CERO Emisiones">Acceso ZBE Málaga (Vehículo CERO)</option>
+                    <option value="Plataforma Elevadora 1.500 kg">Descarga con Plataforma Elevadora</option>
+                    <option value="Tauliner Lona Lateral (Carretilla/Grúa)">Apertura Lateral Tauliner (Grúa/Carretilla)</option>
+                    <option value="Operador Internacional / Gran Tonelaje">Tránsito Internacional / Gran Tonelaje</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-700 mb-1.5">Observaciones Especiales de Descarga</label>
+                <textarea id="formNotes" rows="2" placeholder="Indique contacto en obra, restricciones de calle peatonal o requerimiento de e-CMR..." class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-sm text-slate-800">Solicitar firma biométrica digital e-CMR al jefe de equipo en recepción.</textarea>
+              </div>
+
+              <div class="pt-2 flex flex-wrap items-center justify-between gap-4">
+                <div class="text-xs text-slate-500">
+                  <i class="fa-solid fa-wand-magic-sparkles text-brand-accent mr-1"></i> Al registrar el envío, se insertará automáticamente en el <strong>Centro de Control TMS (Pestaña 2)</strong>.
+                </div>
+                <button type="submit" class="px-6 py-3.5 rounded-xl bg-brand-navy hover:bg-brand-blue text-white font-bold text-sm shadow-lg transition-all flex items-center gap-2">
+                  <i class="fa-solid fa-paper-plane"></i> Registrar Orden en el TMS
+                </button>
+              </div>
+            </form>
+
+            <!-- Alerta de confirmación de registro -->
+            <div id="orderSuccessBanner" class="hidden mt-4 p-4 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>
+                <span id="orderSuccessText" class="font-medium">Orden registrada con éxito en la base de datos relacional del TMS.</span>
+              </div>
+              <button onclick="switchTmsTab('control')" class="px-3 py-1.5 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-colors shrink-0">
+                Ver en Tabla TMS →
+              </button>
+            </div>
+          </div>
+
+          <!-- Columna Lateral: Fórmulas BUSCARX y Conector Google Forms -->
+          <div class="lg:col-span-4 space-y-6">
+            <div class="bg-brand-dark text-white rounded-2xl p-6 border border-slate-800 space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <span class="text-xs font-mono font-bold text-brand-cyan uppercase">Paso 1.2 · Automatización IA</span>
+                <span class="text-[10px] bg-brand-blue px-2 py-0.5 rounded font-mono">Google Sheets / Excel</span>
+              </div>
+              <h4 class="font-bold text-base">Fórmulas Relacionales Implementadas</h4>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Para evitar errores manuales al teclear pedidos, la tabla <code class="text-sky-300">Ordenes_Transporte</code> autocompleta dirección y horario consultando <code class="text-sky-300">Clientes_B2B</code>:
+              </p>
+              
+              <div class="space-y-3 font-mono text-[11px]">
+                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                  <span class="text-slate-400 block mb-1">// 1. Autocompletado Dirección Postal:</span>
+                  <code class="text-emerald-400 break-all">=BUSCARX(C2; Clientes_B2B!A:A; Clientes_B2B!E:E; "Cliente No Encontrado")</code>
+                </div>
+                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                  <span class="text-slate-400 block mb-1">// 2. Autocompletado Ventana Horaria:</span>
+                  <code class="text-sky-400 break-all">=BUSCARX(C2; Clientes_B2B!A:A; Clientes_B2B!F:F; "Sin Ventana Definida")</code>
+                </div>
+                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                  <span class="text-slate-400 block mb-1">// 3. Regla de Validación (Menú Desplegable):</span>
+                  <code class="text-amber-300">Datos > Validación > Lista: "Pendiente, Planificado, En ruta, Entregado, Incidencia"</code>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tarjeta Conector Google Forms externo -->
+            <div class="bg-sky-50 rounded-2xl p-5 border border-sky-200 space-y-3">
+              <div class="flex items-center gap-2 text-brand-blue font-bold text-sm">
+                <i class="fa-brands fa-wpforms text-lg"></i>
+                <span>Visor Externo Google Forms / Airtable</span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                ¿Desea incrustar aquí la vista externa de su Google Forms además del formulario nativo? Pegue el enlace público de su formulario:
+              </p>
+              <div class="flex gap-2">
+                <input type="url" id="customFormUrl" placeholder="https://docs.google.com/forms/d/e/.../viewform?embedded=true" class="flex-1 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs">
+                <button onclick="embedCustomIframe('customFormUrl', 'customFormContainer')" class="px-3 py-1.5 bg-brand-blue text-white rounded-lg text-xs font-bold hover:bg-brand-navy">Incrustar</button>
+              </div>
+              <div id="customFormContainer" class="hidden pt-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- PESTAÑA 2: CENTRO DE CONTROL TMS (FASE 1 Y 3 - LAS 3 TABLAS)    -->
+      <!-- =============================================================== -->
+      <div id="tms-panel-control" class="tms-panel hidden bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-xl space-y-10">
+        
+        <div class="flex flex-wrap justify-between items-start gap-4 border-b border-slate-200 pb-6">
+          <div>
+            <span class="text-xs font-mono font-bold text-brand-blue uppercase">FASE 1 · ARQUITECTURA DE BASE DE DATOS RELACIONAL SAAAS</span>
+            <h3 class="text-2xl font-extrabold text-brand-navy mt-1">Centro de Control TMS (Tablero de Gestión de Órdenes)</h3>
+            <p class="text-sm text-slate-600 mt-1">
+              Base de datos estructurada en <strong>3 tablas relacionales interconectadas</strong> (<code class="font-mono text-xs bg-slate-100 px-1 rounded">LIBRO FASES Y CLIENTES.xlsx</code>). Puede filtrar órdenes o cambiar el estado del ciclo de vida en directo.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs bg-slate-100 text-slate-700 px-3 py-1.5 rounded-xl font-mono font-bold border border-slate-300">
+              Demanda Total: 20.830 kg | 95,0 m³
+            </span>
+            <span class="text-xs bg-sky-100 text-brand-blue px-3 py-1.5 rounded-xl font-mono font-bold border border-sky-300">
+              8 Cajas + 45 Europalés
+            </span>
+          </div>
+        </div>
+
+        <!-- TABLA 3 (PRINCIPAL): ÓRDENES DE TRANSPORTE -->
+        <div class="space-y-4">
+          <div class="flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-brand-navy text-brand-cyan flex items-center justify-center font-bold text-sm">T3</span>
+              <div>
+                <h4 class="text-lg font-extrabold text-brand-navy">Tabla 3: `Ordenes_Transporte` (Ciclo de Vida de Pedidos)</h4>
+                <p class="text-xs text-slate-500">Vinculada relacionalmente mediante Claves Foráneas (`ID_CLIENTE` y `ID_VEHÍCULO`). Cambie el menú desplegable para actualizar el estado.</p>
+              </div>
+            </div>
+            <!-- Filtro rápido por estado -->
+            <div class="flex items-center gap-2 text-xs">
+              <span class="font-bold text-slate-600">Filtrar estado:</span>
+              <select id="filterOrderStatus" onchange="renderOrdersTable()" class="bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 font-semibold text-slate-700">
+                <option value="ALL">Todos los envíos (6)</option>
+                <option value="Entregado">Entregado</option>
+                <option value="En ruta">En ruta</option>
+                <option value="Planificado">Planificado</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Incidencia">Incidencia</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-brand-navy text-white font-mono uppercase text-[11px]">
+                  <th class="py-3.5 px-3">ID_ORDEN</th>
+                  <th class="py-3.5 px-3">FECHA</th>
+                  <th class="py-3.5 px-3">ID_CLIENTE</th>
+                  <th class="py-3.5 px-3">ID_VEHÍCULO</th>
+                  <th class="py-3.5 px-3">DESCRIPCIÓN DE MERCANCÍA</th>
+                  <th class="py-3.5 px-3">BULTOS</th>
+                  <th class="py-3.5 px-3 text-right">PESO (KG)</th>
+                  <th class="py-3.5 px-3 text-right">VOL. (m³)</th>
+                  <th class="py-3.5 px-3">ORIGEN → DESTINO</th>
+                  <th class="py-3.5 px-3">VENTANA (`BUSCARX`)</th>
+                  <th class="py-3.5 px-3">ESTADO DEL ENVÍO</th>
+                  <th class="py-3.5 px-3">e-CMR / POD</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableBody" class="divide-y divide-slate-200 bg-white">
+                <!-- Populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TABLA 1: CLIENTES B2B -->
+        <div class="space-y-4 pt-4 border-t border-slate-200">
+          <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-lg bg-brand-blue text-white flex items-center justify-center font-bold text-sm">T1</span>
+            <div>
+              <h4 class="text-lg font-extrabold text-brand-navy">Tabla 1: `Clientes_B2B` (Directorio Maestro de Cartera B2B)</h4>
+              <p class="text-xs text-slate-500">Define el identificador único (`ID_CLIENTE`), CIF/VAT, alcance, dirección postal exacta, ventana horaria de descarga y contacto.</p>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-800 text-white font-mono uppercase text-[11px]">
+                  <th class="py-3 px-3">ID_CLIENTE</th>
+                  <th class="py-3 px-3">RAZÓN SOCIAL</th>
+                  <th class="py-3 px-3">CIF / VAT</th>
+                  <th class="py-3 px-3">ALCANCE</th>
+                  <th class="py-3 px-3">DIRECCIÓN POSTAL COMPLETA</th>
+                  <th class="py-3 px-3">VENTANA HORARIA</th>
+                  <th class="py-3 px-3">PERSONA DE CONTACTO</th>
+                  <th class="py-3 px-3">TELÉFONO</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 bg-white">
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-3 font-mono font-bold text-brand-blue">CLI-001</td>
+                  <td class="py-3 px-3 font-bold text-slate-900">SUMINISTROS ILUMINACIÓN CENTRO S.L.</td>
+                  <td class="py-3 px-3 font-mono">B93112233</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">LOCAL (ZBE)</span></td>
+                  <td class="py-3 px-3">C/ CARRETERÍA 45, DISTRITO CENTRO (ZBE), 29008 MÁLAGA</td>
+                  <td class="py-3 px-3 font-mono font-bold text-slate-800">08:30 - 10:30 H</td>
+                  <td class="py-3 px-3">ANTONIO RUIZ</td>
+                  <td class="py-3 px-3 font-mono">952210590</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-3 font-mono font-bold text-brand-blue">CLI-002</td>
+                  <td class="py-3 px-3 font-bold text-slate-900">MONTAJES ELECTROMECÁNICOS PUERTO S.L.</td>
+                  <td class="py-3 px-3 font-mono">B93112233</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">LOCAL</span></td>
+                  <td class="py-3 px-3">MUELLE DE PONIENTE S/N, RECINTO PORTUARIO, 29001 MÁLAGA</td>
+                  <td class="py-3 px-3 font-mono font-bold text-slate-800">10:00 - 12:00 H</td>
+                  <td class="py-3 px-3">JAVIER MORALES</td>
+                  <td class="py-3 px-3 font-mono">952210590</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-3 font-mono font-bold text-brand-blue">CLI-003</td>
+                  <td class="py-3 px-3 font-bold text-slate-900">ANDALUSIÁTICA RENOVABLES S.A.</td>
+                  <td class="py-3 px-3 font-mono">A29182345</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-sky-100 text-sky-800 font-bold text-[10px]">COMARCAL / NAC.</span></td>
+                  <td class="py-3 px-3">POLÍGONO INDUSTRIAL LA ERMITA, C/ PIRITA 8, 29603 MARBELLA (MÁLAGA)</td>
+                  <td class="py-3 px-3 font-mono font-bold text-slate-800">09:00 - 11:00 H</td>
+                  <td class="py-3 px-3">ELENA TORRES</td>
+                  <td class="py-3 px-3 font-mono">952210590</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-3 font-mono font-bold text-brand-blue">CLI-004</td>
+                  <td class="py-3 px-3 font-bold text-slate-900">INFRAESTRUCTURAS Y REDES DEL NORTE S.A.</td>
+                  <td class="py-3 px-3 font-mono">A28445566</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-bold text-[10px]">NACIONAL</span></td>
+                  <td class="py-3 px-3">POLÍGONO INDUSTRIAL AS GÁNDARAS, C/ B 12, 27003 LUGO (GALICIA)</td>
+                  <td class="py-3 px-3 font-mono font-bold text-slate-800">08:30 - 11:30 H</td>
+                  <td class="py-3 px-3">CARLOS DELGADO</td>
+                  <td class="py-3 px-3 font-mono">952210590</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-3 font-mono font-bold text-brand-blue">CLI-005</td>
+                  <td class="py-3 px-3 font-bold text-slate-900">EUROELECTRICAL COMPONENTS GMBH</td>
+                  <td class="py-3 px-3 font-mono">DE319827401</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-bold text-[10px]">INTERNACIONAL</span></td>
+                  <td class="py-3 px-3">INDUSTRIESTRAßE 24, 60314 FRANKFURT AM MAIN, ALEMANIA</td>
+                  <td class="py-3 px-3 font-mono font-bold text-slate-800">09:00 - 14:00 H</td>
+                  <td class="py-3 px-3">HANS WEBER</td>
+                  <td class="py-3 px-3 font-mono">952210590</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-3 font-mono font-bold text-brand-blue">CLI-006</td>
+                  <td class="py-3 px-3 font-bold text-slate-900">PORTUGUESA DE TRANSFORMADORES S.A.</td>
+                  <td class="py-3 px-3 font-mono">PT509812345</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-bold text-[10px]">INTERNACIONAL</span></td>
+                  <td class="py-3 px-3">ZONA INDUSTRIAL DO PORTO, LOTE 14, 4400-346 VILA NOVA DE GAIA, OPORTO, PORTUGAL</td>
+                  <td class="py-3 px-3 font-mono font-bold text-slate-800">10:00 - 16:00 H</td>
+                  <td class="py-3 px-3">SOFIA SANTOS</td>
+                  <td class="py-3 px-3 font-mono">952210590</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TABLA 2: FLOTA Y RECURSOS -->
+        <div class="space-y-4 pt-4 border-t border-slate-200">
+          <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-sm">T2</span>
+            <div>
+              <h4 class="text-lg font-extrabold text-brand-navy">Tabla 2: `Flota_Recursos` (Dimensionamiento Legal y Capacidad de Flota)</h4>
+              <p class="text-xs text-slate-500">Flota propia para operaciones en Málaga/Andalucía y recursos externalizados (`VEC-04` a `VEC-06`) para rutas nacionales e internacionales de gran tonelaje.</p>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-800 text-white font-mono uppercase text-[11px]">
+                  <th class="py-3 px-3">ID_VEHÍCULO</th>
+                  <th class="py-3 px-3">MATRÍCULA</th>
+                  <th class="py-3 px-3">TIPO DE VEHÍCULO</th>
+                  <th class="py-3 px-3">CONDUCTOR ASIGNADO</th>
+                  <th class="py-3 px-3 text-right">TARA (KG)</th>
+                  <th class="py-3 px-3 text-right">MMA (KG)</th>
+                  <th class="py-3 px-3 text-right">CARGA ÚTIL (KG)</th>
+                  <th class="py-3 px-3">CAPACIDAD PALÉS</th>
+                  <th class="py-3 px-3">ETIQUETA DGT</th>
+                  <th class="py-3 px-3 text-right">VOLUMEN (m³)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 bg-white">
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-3 font-mono font-bold text-emerald-700">VEC-01</td>
+                  <td class="py-3 px-3 font-mono font-semibold">4821 LZX</td>
+                  <td class="py-3 px-3 font-bold text-slate-900">Iveco eDaily (Furgón Eléctrico ZBE)</td>
+                  <td class="py-3 px-3">Francisco Javier Marín</td>
+                  <td class="py-3 px-3 text-right font-mono">2.250</td>
+                  <td class="py-3 px-3 text-right font-mono">3.500</td>
+                  <td class="py-3 px-3 text-right font-mono font-bold text-emerald-700">1.250</td>
+                  <td class="py-3 px-3 font-mono">4 - 5 Europalés</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">CERO EMISIONES</span></td>
+                  <td class="py-3 px-3 text-right font-mono">12,0 m³</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-3 font-mono font-bold text-brand-blue">VEC-02</td>
+                  <td class="py-3 px-3 font-mono font-semibold">9102 KVB</td>
+                  <td class="py-3 px-3 font-bold text-slate-900">Mercedes-Benz Atego 1224 (Plataforma 1.500kg)</td>
+                  <td class="py-3 px-3">Roberto Sánchez</td>
+                  <td class="py-3 px-3 text-right font-mono">5.400</td>
+                  <td class="py-3 px-3 text-right font-mono">12.000</td>
+                  <td class="py-3 px-3 text-right font-mono font-bold text-brand-blue">6.600</td>
+                  <td class="py-3 px-3 font-mono">14 - 16 Europalés</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-sky-100 text-sky-800 font-bold text-[10px]">C (EURO 6)</span></td>
+                  <td class="py-3 px-3 text-right font-mono">38,0 m³</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-3 font-mono font-bold text-brand-navy">VEC-03</td>
+                  <td class="py-3 px-3 font-mono font-semibold">3341 MHT</td>
+                  <td class="py-3 px-3 font-bold text-slate-900">Volvo FL 250 (Tauliner Lona Corredera)</td>
+                  <td class="py-3 px-3">David Carmona</td>
+                  <td class="py-3 px-3 text-right font-mono">7.200</td>
+                  <td class="py-3 px-3 text-right font-mono">18.000</td>
+                  <td class="py-3 px-3 text-right font-mono font-bold text-brand-navy">10.800</td>
+                  <td class="py-3 px-3 font-mono">18 - 20 Europalés</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-sky-100 text-sky-800 font-bold text-[10px]">C (EURO 6)</span></td>
+                  <td class="py-3 px-3 text-right font-mono">48,0 m³</td>
+                </tr>
+                <tr class="bg-slate-50/80 text-slate-600">
+                  <td class="py-3 px-3 font-mono font-bold text-purple-700">VEC-04..06</td>
+                  <td class="py-3 px-3 font-mono">EXT-ROA</td>
+                  <td class="py-3 px-3 font-semibold">Operadores Subcontratados Larga Distancia (Tráiler 40t)</td>
+                  <td class="py-3 px-3">Agencia Partner Nacional / UE</td>
+                  <td class="py-3 px-3 text-right font-mono">14.000</td>
+                  <td class="py-3 px-3 text-right font-mono">40.000</td>
+                  <td class="py-3 px-3 text-right font-mono font-bold">26.000</td>
+                  <td class="py-3 px-3 font-mono">33 Europalés</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-bold text-[10px]">EURO 6 LONG-HAUL</span></td>
+                  <td class="py-3 px-3 text-right font-mono">90,0 m³</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Conector para incrustar Google Sheets en vivo -->
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+          <div class="space-y-1">
+            <h5 class="text-sm font-bold text-brand-navy flex items-center gap-2">
+              <i class="fa-solid fa-table text-emerald-600"></i> Conector de Hoja de Cálculo Google Sheets / Airtable (Modo Consulta Pública)
+            </h5>
+            <p class="text-xs text-slate-500">Las 3 tablas de su archivo <code class="font-mono">LIBRO FASES Y CLIENTES.xlsx</code> ya se muestran arriba. Si desea abrir o incrustar su enlace de Google Sheets en la nube, péguelo aquí:</p>
+          </div>
+          <div class="flex gap-2 w-full sm:w-auto">
+            <input type="url" id="customSheetUrl" placeholder="https://docs.google.com/spreadsheets/d/.../pubhtml" class="flex-1 sm:w-80 bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs">
+            <button onclick="embedCustomIframe('customSheetUrl', 'customSheetContainer')" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 shrink-0">Cargar Hoja</button>
+          </div>
+          <div id="customSheetContainer" class="hidden w-full pt-4"></div>
+        </div>
+
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- PESTAÑA 3: TRAZABILIDAD Y RUTAS EN TIEMPO REAL (FASE 4)         -->
+      <!-- =============================================================== -->
+      <div id="tms-panel-rutas" class="tms-panel hidden bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-xl space-y-8">
+        
+        <div class="flex flex-wrap justify-between items-start gap-4 border-b border-slate-200 pb-6">
+          <div>
+            <span class="text-xs font-mono font-bold text-emerald-700 uppercase">FASE 4 · OPTIMIZACIÓN DE RUTAS, SECUENCIACIÓN Y GOOGLE MY MAPS</span>
+            <h3 class="text-2xl font-extrabold text-brand-navy mt-1">Operaciones y Trazabilidad en Tiempo Real</h3>
+            <p class="text-sm text-slate-600 mt-1">
+              Mapa interactivo titulado <strong>"Monitoreo de Rutas y Trazabilidad en Tiempo Real - ElectroLogística"</strong> con marcadores diferenciados por estado y fichas técnicas de seguimiento.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-2 text-xs font-bold">
+            <button onclick="focusMapView('malaga')" class="px-3.5 py-2 rounded-xl bg-brand-navy text-white hover:bg-brand-blue transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-location-crosshairs text-brand-cyan"></i> Zoom Ruta Málaga + Marbella
+            </button>
+            <button onclick="focusMapView('europa')" class="px-3.5 py-2 rounded-xl bg-slate-200 text-slate-800 hover:bg-slate-300 transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-globe-europe text-brand-blue"></i> Ver Red Nacional / UE (6 Clientes)
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Secuenciación Cronológica de Paradas (Paso 4.1) -->
+          <div class="lg:col-span-5 space-y-4">
+            <div class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-800 space-y-5">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <span class="text-xs font-mono text-brand-cyan uppercase font-bold">Paso 4.1 · Secuencia Lógica</span>
+                <span class="text-[11px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">0% KM EN VACÍO</span>
+              </div>
+              <h4 class="text-lg font-bold">Itinerario Cronológico Consolidado</h4>
+
+              <!-- Timeline Vertical -->
+              <div class="space-y-4 relative before:absolute before:inset-0 before:left-3 before:w-0.5 before:bg-slate-700">
+                
+                <!-- 08:00 Base -->
+                <div class="relative pl-8">
+                  <span class="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 font-bold text-xs flex items-center justify-center absolute left-0 top-0.5">B</span>
+                  <div class="text-xs font-mono text-emerald-400 font-bold">08:00 H · SALIDA BASE LOGÍSTICA</div>
+                  <div class="text-sm font-bold text-white">Nave Pol. Ind. Guadalhorce (Málaga)</div>
+                  <p class="text-xs text-slate-400">Carga y expedición desde C/ Esteban Salazar Chapela.</p>
+                </div>
+
+                <!-- 08:30 Parada 1 -->
+                <div class="relative pl-8">
+                  <span class="w-6 h-6 rounded-full bg-sky-400 text-slate-950 font-bold text-xs flex items-center justify-center absolute left-0 top-0.5">1</span>
+                  <div class="text-xs font-mono text-sky-400 font-bold">08:30 - 09:15 H · PARADA 1 (VEC-01 · ORD-001)</div>
+                  <div class="text-sm font-bold text-white">C/ Carretería 45 (Centro Histórico ZBE)</div>
+                  <p class="text-xs text-slate-300">Ventana: <strong>08:30 - 10:30 H</strong> · 8 Cajas Focos LED (280 kg).</p>
+                  <span class="inline-block mt-1 text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">Estado: ENTREGADO (Cumple 100%)</span>
+                </div>
+
+                <!-- 09:45 Parada 2 -->
+                <div class="relative pl-8">
+                  <span class="w-6 h-6 rounded-full bg-amber-400 text-slate-950 font-bold text-xs flex items-center justify-center absolute left-0 top-0.5">2</span>
+                  <div class="text-xs font-mono text-amber-400 font-bold">09:45 - 10:45 H · PARADA 2 (VEC-02 · ORD-002)</div>
+                  <div class="text-sm font-bold text-white">Muelle de Poniente s/n (Puerto de Málaga)</div>
+                  <p class="text-xs text-slate-300">Ventana: <strong>10:00 - 12:00 H</strong> · 3 Palés Paneles BT (950 kg). Descarga con plataforma hidráulica trasera.</p>
+                  <span class="inline-block mt-1 text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-mono">Estado: EN RUTA (Cumple 100%)</span>
+                </div>
+
+                <!-- 11:30 Parada 3 -->
+                <div class="relative pl-8">
+                  <span class="w-6 h-6 rounded-full bg-yellow-300 text-slate-950 font-bold text-xs flex items-center justify-center absolute left-0 top-0.5">3</span>
+                  <div class="text-xs font-mono text-yellow-300 font-bold">11:30 - 12:30 H · PARADA 3 (VEC-02 · ORD-003)</div>
+                  <div class="text-sm font-bold text-white">P.I. La Ermita, C/ Pirita 8 (Marbella)</div>
+                  <p class="text-xs text-slate-300">Ventana: <strong>09:00 - 11:00 H</strong> · 6 Palés Inversores Solares (3.200 kg). Continuación por A-7 con notificación ETA automatizada por tráfico.</p>
+                  <span class="inline-block mt-1 text-[10px] bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded font-mono">Estado: PLANIFICADO (Aviso ETA Activo)</span>
+                </div>
+
+                <!-- 13:30 Retorno -->
+                <div class="relative pl-8">
+                  <span class="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 font-bold text-xs flex items-center justify-center absolute left-0 top-0.5">R</span>
+                  <div class="text-xs font-mono text-emerald-400 font-bold">13:30 H · RETORNO A BASE GUADALHORCE</div>
+                  <div class="text-sm font-bold text-white">Cierre de Ruta Matutina y Consolidación de Tarde</div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Mapa Interactivo de Monitoreo en Vivo (Paso 4.2 y 4.3) -->
+          <div class="lg:col-span-7 space-y-4">
+            <div class="rounded-2xl overflow-hidden border-2 border-slate-300 shadow-lg bg-slate-900">
+              <div class="bg-brand-navy text-white px-4 py-3 flex flex-wrap justify-between items-center gap-2 text-xs">
+                <div class="flex items-center gap-2 font-bold">
+                  <i class="fa-solid fa-map-pin text-brand-cyan"></i>
+                  <span>Monitoreo de Rutas y Seguimiento de Flota (Haz clic en cada marcador)</span>
+                </div>
+                <div class="flex items-center gap-3 text-[11px]">
+                  <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Base</span>
+                  <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-sky-500 inline-block"></span> Entregado</span>
+                  <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block"></span> En Ruta</span>
+                  <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-300 inline-block"></span> Planificado</span>
+                </div>
+              </div>
+              <!-- Contenedor del Mapa Interactivo Real -->
+              <div id="tmsMap"></div>
+            </div>
+
+            <!-- Conector opcional para iframe de Google My Maps propio -->
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+              <div class="text-xs text-slate-600">
+                <i class="fa-solid fa-map-location text-brand-blue mr-1"></i> <strong>Conector Google My Maps:</strong> El mapa superior ya muestra sus rutas y fichas interactivas. Si además desea incrustar un enlace <code class="font-mono">embed</code> de Google My Maps propio, péguelo aquí:
+              </div>
+              <div class="flex gap-2 w-full sm:w-auto">
+                <input type="url" id="customMapUrl" placeholder="https://www.google.com/maps/d/embed?mid=..." class="flex-1 sm:w-72 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs">
+                <button onclick="embedCustomIframe('customMapUrl', 'customMapContainer')" class="px-3 py-1.5 bg-brand-navy text-white rounded-lg text-xs font-bold hover:bg-brand-blue">Incrustar Mapa</button>
+              </div>
+              <div id="customMapContainer" class="hidden w-full pt-3"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- PESTAÑA 4: MEMORIA TÉCNICA TMS, CONSOLIDACIÓN E IA (FASE 3 Y 5) -->
+      <!-- =============================================================== -->
+      <div id="tms-panel-memoria" class="tms-panel hidden bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-xl space-y-10">
+        
+        <div class="border-b border-slate-200 pb-6">
+          <span class="text-xs font-mono font-bold text-amber-600 uppercase">FASE 3 Y FASE 5 · DOCUMENTACIÓN TÉCNICA, ESTIBA Y AUDITORÍA DE IA</span>
+          <h3 class="text-2xl font-extrabold text-brand-navy mt-1">Memoria Técnica TMS, Consolidación de Cargas y Uso Crítico de la IA</h3>
+          <p class="text-sm text-slate-600 mt-1">
+            Justificación matemática de la ocupación de flota sin sobrecarga (Art. 140 LOTT), registro literal de prompts, detección crítica de 2 errores graves de la IA y guion de defensa oral.
+          </p>
+        </div>
+
+        <!-- BLOQUE 1: CONSOLIDACIÓN INTELIGENTE DE CARGAS (FASE 3) -->
+        <div class="space-y-6">
+          <h4 class="text-lg font-extrabold text-brand-navy flex items-center gap-2">
+            <i class="fa-solid fa-boxes-stacked text-brand-accent"></i>
+            <span>1. Análisis de Capacidad y Consolidación Inteligente de Cargas (Fase 3)</span>
+          </h4>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Ruta 1: VEC-01 -->
+            <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-mono font-bold bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded">VEC-01 · Iveco eDaily</span>
+                <span class="text-xs font-bold text-emerald-700">CERO Emisiones</span>
+              </div>
+              <h5 class="font-bold text-base text-slate-900">1. Ruta Local Urbana ZBE (Málaga Centro)</h5>
+              <p class="text-xs text-slate-600">Asignada en exclusividad a <strong>ORD-001</strong> (C/ Carretería 45) por restricción ambiental ZBE y calles estrechas.</p>
+              <div class="space-y-2 pt-2 text-xs font-mono">
+                <div class="flex justify-between"><span>Peso Ocupado:</span><span class="font-bold">280 / 1.250 kg (22,40%)</span></div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden"><div class="bg-emerald-500 h-full w-[22.4%]"></div></div>
+                <div class="flex justify-between"><span>Volumen Ocupado:</span><span class="font-bold">1,8 / 12,0 m³ (15,00%)</span></div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden"><div class="bg-sky-500 h-full w-[15%]"></div></div>
+              </div>
+            </div>
+
+            <!-- Ruta 2: VEC-02 Consolidada -->
+            <div class="bg-sky-50/70 rounded-2xl p-6 border-2 border-brand-blue/30 space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-mono font-bold bg-brand-blue text-white px-2.5 py-1 rounded">VEC-02 · Mercedes Atego</span>
+                <span class="text-xs font-bold text-brand-blue">Consolidación Estrella</span>
+              </div>
+              <h5 class="font-bold text-base text-slate-900">2. Ruta Comarcal Consolidada (Puerto + Marbella)</h5>
+              <p class="text-xs text-slate-600">Agrupa <strong>ORD-002 (950 kg, 3 palés) + ORD-003 (3.200 kg, 6 palés)</strong> aprovechando la plataforma elevadora en el Puerto y siguiendo por la A-7 hacia Marbella.</p>
+              <div class="space-y-2 pt-2 text-xs font-mono">
+                <div class="flex justify-between"><span>Peso Consolidado:</span><span class="font-bold text-brand-navy">4.150 / 6.600 kg (62,88%)</span></div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden"><div class="bg-brand-blue h-full w-[62.88%]"></div></div>
+                <div class="flex justify-between"><span>Volumen Consolidado:</span><span class="font-bold text-brand-navy">18,2 / 38,0 m³ (47,89%)</span></div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden"><div class="bg-brand-cyan h-full w-[47.89%]"></div></div>
+                <div class="text-[11px] text-slate-700 pt-1">Ocupación en planta: <strong>9 Europalés</strong> (Máx: 14-16 palés).</div>
+              </div>
+            </div>
+
+            <!-- Ruta 3: Larga Distancia -->
+            <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-mono font-bold bg-purple-100 text-purple-800 px-2.5 py-1 rounded">VEC-04 a VEC-06</span>
+                <span class="text-xs font-bold text-purple-700">Externalización</span>
+              </div>
+              <h5 class="font-bold text-base text-slate-900">3. Gestión Nacional e Internacional</h5>
+              <p class="text-xs text-slate-600"><strong>ORD-004 (Lugo, 5.100 kg)</strong>, <strong>ORD-005 (Frankfurt, 4.800 kg)</strong> y <strong>ORD-006 (Oporto, 6.500 kg)</strong> suman 16.400 kg y 36 palés.</p>
+              <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs text-slate-700 space-y-1">
+                <p><strong>Decisión Estratégica:</strong> La flota propia suma 18.650 kg de capacidad local. Enviar nuestros camiones a Alemania o Galicia colapsaría el reparto diario en Málaga. Se externalizan mediante operadores de gran tonelaje con emisión de <strong>e-CMR digital</strong>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BLOQUE 2: CUADERNO DE PROMPTS LITERALES (PASO 5.1) -->
+        <div class="space-y-4 pt-6 border-t border-slate-200">
+          <h4 class="text-lg font-extrabold text-brand-navy flex items-center gap-2">
+            <i class="fa-solid fa-terminal text-brand-blue"></i>
+            <span>2. Cuaderno de Prompts Literales Utilizados (Paso 5.1)</span>
+          </h4>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-slate-900 text-slate-200 p-5 rounded-2xl border border-slate-800 font-mono text-xs space-y-2">
+              <span class="text-brand-cyan font-bold uppercase block">// PROMPT 1: ARQUITECTURA DE BASE DE DATOS Y BUSCARX</span>
+              <p class="leading-relaxed text-slate-300">
+                "Actúa como un experto en sistemas TMS. Genera la estructura de 3 tablas relacionales (Clientes, Vehículos y Órdenes) en Excel con fórmulas BUSCARX y validaciones de datos para una empresa de transporte en Málaga."
+              </p>
+            </div>
+            <div class="bg-slate-900 text-slate-200 p-5 rounded-2xl border border-slate-800 font-mono text-xs space-y-2">
+              <span class="text-emerald-400 font-bold uppercase block">// PROMPT 2: CONSOLIDACIÓN INTELIGENTE Y RESTRICCIONES</span>
+              <p class="leading-relaxed text-slate-300">
+                "Tengo 6 pedidos B2B con un total de 20.830 kg y 3 vehículos (3,5t eléctrico, 12t con plataforma y 18t tauliner). Optimiza el reparto sin superar las Cargas Útiles legales y respetando la ZBE de Málaga."
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- BLOQUE 3: DETECCIÓN CRÍTICA DE 2 ERRORES DE LA IA Y CORRECCIÓN HUMANA -->
+        <div class="space-y-6 pt-6 border-t border-slate-200">
+          <h4 class="text-lg font-extrabold text-brand-navy flex items-center gap-2">
+            <i class="fa-solid fa-triangle-exclamation text-rose-600"></i>
+            <span>3. Auditoría Crítica de Errores de la IA y Corrección Humana (Paso 5.1)</span>
+          </h4>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Error Crítico 1 -->
+            <div class="bg-rose-50/60 rounded-2xl p-6 border-2 border-rose-200 space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-rose-600 text-white text-xs font-bold uppercase">Error Crítico 1 de la IA</span>
+                <span class="text-xs font-mono font-bold text-rose-800">Infracción Muy Grave LOTT</span>
+              </div>
+              <h5 class="text-lg font-extrabold text-slate-900">Sobrecarga Ilegal de la Furgoneta Urbana Iveco eDaily</h5>
+              
+              <div class="space-y-2 text-xs text-slate-700 leading-relaxed">
+                <p><strong>❌ Incoherencia de la IA:</strong> Propuso consolidar <strong>2.000 kg de carga</strong> dentro de la furgoneta eléctrica Iveco eDaily bajo el pretexto de <em>"aprovechar que es el único vehículo con etiqueta CERO Emisiones para entrar al centro de Málaga"</em>.</p>
+                <p><strong>🔍 Análisis y Corrección Humana:</strong> Revisando la Ficha Técnica, la Tara es de <strong>2.250 kg</strong> y la MMA legal es de <strong>3.500 kg</strong>, dejando una <strong>Carga Útil máxima de 1.250 kg</strong>. Meter 2.000 kg suponía alcanzar 4.250 kg totales (<strong>750 kg de exceso = 60% de sobrecarga</strong>), causando inmovilización policial, sanción LOTT y anulación del seguro.</p>
+              </div>
+
+              <div class="bg-slate-900 text-white p-4 rounded-xl font-mono text-[11px] space-y-1.5">
+                <div class="text-slate-400">[ANÁLISIS DE MASAS - FURGÓN IVECO eDAILY]</div>
+                <div>Tara: 2.250 kg + Carga Útil Máx: 1.250 kg = <strong>MMA Permitida: 3.500 kg</strong></div>
+                <div class="text-rose-400">❌ PROPUESTA IA: 2.250 kg + 2.000 kg = 4.250 kg → ¡SOBRECARGA DE 750 KG (ILEGAL)!</div>
+                <div class="text-emerald-400">✅ CORRECCIÓN HUMANA: 2.250 kg + 280 kg (ORD-001) = 2.530 kg → ¡CUMPLE NORMATIVA!</div>
+              </div>
+            </div>
+
+            <!-- Error Crítico 2 -->
+            <div class="bg-amber-50/70 rounded-2xl p-6 border-2 border-amber-200 space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="px-3 py-1 rounded-full bg-amber-600 text-white text-xs font-bold uppercase">Error Crítico 2 de la IA</span>
+                <span class="text-xs font-mono font-bold text-amber-900">Prohibición Aérea AESA</span>
+              </div>
+              <h5 class="text-lg font-extrabold text-slate-900">Propuesta Inviable de Entrega de Bobinas de 1.000 kg con Drones</h5>
+              
+              <div class="space-y-2 text-xs text-slate-700 leading-relaxed">
+                <p><strong>❌ Incoherencia de la IA:</strong> Para esquivar los atascos del centro de Málaga, la IA sugirió realizar entregas aéreas directas mediante drones cargando <strong>bobinas de cable de cobre de 1.000 kg</strong>.</p>
+                <p><strong>🔍 Análisis y Corrección Humana:</strong> Detectamos una doble imposibilidad técnica y legal: no existen multicópteros comerciales de reparto urbano capaces de izar 1 tonelada, y la <strong>Agencia Estatal de Seguridad Aérea (AESA)</strong> prohíbe taxativamente sobrevolar cascos urbanos habitados con cargas pesadas.</p>
+              </div>
+
+              <div class="bg-white p-4 rounded-xl border border-amber-300 text-xs text-slate-800 space-y-1.5">
+                <div class="font-bold text-emerald-800 flex items-center gap-1.5">
+                  <i class="fa-solid fa-circle-check text-emerald-600"></i> Solución Aplicada por el Equipo (Intramuros):
+                </div>
+                <p>Reorientamos los drones exclusivamente al <strong>interior de nuestro almacén en el Polígono Guadalhorce</strong>: utilizamos minidrones con lectores <strong>RFID y QR</strong> para auditar el inventario en las estanterías altas, reduciendo el conteo de 4 horas a 18 minutos sin riesgos laborales en altura.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BLOQUE 4: ESQUEMA DE DEFENSA ORAL ('SPRINT REVIEW' - 2 MINUTOS) -->
+        <div class="bg-gradient-to-r from-brand-navy to-slate-900 text-white rounded-2xl p-6 sm:p-8 space-y-6">
+          <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-700 pb-4">
+            <div>
+              <span class="text-xs font-mono text-brand-cyan uppercase font-bold">Paso 5.3 · Preparación Defensa Oral Individual</span>
+              <h4 class="text-xl font-extrabold mt-0.5">Guion Ejecutivo "Sprint Review" (2 Minutos · Samy, Hugo y Daniel)</h4>
+            </div>
+            <span class="text-xs bg-brand-blue px-3 py-1 rounded-full font-mono border border-brand-cyan/30">Tiempo Total: 120 seg</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div class="bg-slate-800/90 p-4 rounded-xl border border-slate-700 space-y-2">
+              <span class="text-brand-cyan font-mono font-bold block">⏱️ BLOQUE 1 (00:00 - 00:30) · ARQUITECTURA</span>
+              <p class="text-slate-300 leading-relaxed italic">
+                "Hemos transformado el modelo analógico de 2005 en un TMS relacional SaaS en la nube. Estructurado en 3 tablas interconectadas con fórmulas BUSCARX y validación de datos, automatizamos la captura desde nuestra web y gestionamos el ciclo de vida del envío con e-CMR firmado digitalmente."
+              </p>
+            </div>
+            <div class="bg-slate-800/90 p-4 rounded-xl border border-slate-700 space-y-2">
+              <span class="text-emerald-400 font-mono font-bold block">⏱️ BLOQUE 2 (00:30 - 01:15) · CONSOLIDACIÓN</span>
+              <p class="text-slate-300 leading-relaxed italic">
+                "Optimizamos nuestra flota propia asignando la entrega ZBE de Málaga al furgón eléctrico Iveco eDaily (280 kg) y consolidando la ruta del Puerto y Marbella en el camión Mercedes Atego (4.150 kg al 62,88% de carga útil, aprovechando su plataforma elevadora). Las órdenes pesadas a Lugo, Oporto y Frankfurt se externalizan para garantizar ocupación óptima sin viajes en vacío."
+              </p>
+            </div>
+            <div class="bg-slate-800/90 p-4 rounded-xl border border-slate-700 space-y-2">
+              <span class="text-amber-400 font-mono font-bold block">⏱️ BLOQUE 3 (01:15 - 02:00) · AUDITORÍA IA</span>
+              <p class="text-slate-300 leading-relaxed italic">
+                "Como gestores de tráfico, auditamos las propuestas de la IA y corregimos dos fallos graves: evitamos una sobrecarga ilegal de 750 kg en el furgón de 3,5t que proponía la IA y descartamos volar drones con bobinas de 1.000 kg por el centro por normativa AESA, redirigiendo los drones al conteo RFID en las estanterías altas de nuestra nave del Guadalhorce."
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SECCIONES DE LA PRÁCTICA 1 (MANTENIDAS ÍNTEGRAMENTE)                  -->
+  <!-- ===================================================================== -->
+
+  <!-- FASE 1 (PRÁCTICA 1): Nuestra Flota Especializada -->
+  <section id="flota" class="py-20 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-xs font-bold text-brand-blue uppercase tracking-widest bg-sky-50 px-3 py-1 rounded-full border border-sky-200">
+          PRÁCTICA 1 · Dimensión y Fichas Técnicas
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-navy mt-3">
+          Flota Propia Adaptada a Cargas Eléctricas & Pesadas
+        </h2>
+        <p class="text-slate-600 mt-3 text-base">
+          Desde intervenciones de urgencia con parada de producción inmediata hasta transportes pesados de bobinas de alta tensión de 10,8 toneladas.
+        </p>
+      </div>
+
+      <!-- Fleet Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Vehículo 1 -->
+        <div class="group bg-slate-50 hover:bg-white rounded-2xl border border-slate-200 hover:border-brand-cyan transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col overflow-hidden">
+          <div class="p-6 border-b border-slate-100 bg-gradient-to-r from-slate-100 to-sky-50 flex items-start justify-between">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-brand-blue bg-white px-2 py-0.5 rounded border border-slate-200">VEC-01 · 4821 LZX</span>
+              <h3 class="text-xl font-bold text-brand-navy mt-1">Iveco eDaily 35S16</h3>
+              <p class="text-xs text-slate-500">Furgón Eléctrico ZBE · Chófer: Fco. Javier Marín</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center text-brand-accent">
+              <i class="fa-solid fa-van-shuttle text-xl"></i>
+            </div>
+          </div>
+
+          <div class="p-6 flex-1 space-y-4">
+            <div class="bg-sky-50/70 p-3 rounded-xl border border-sky-100 flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-700">Espacio Disponible:</span>
+              <span class="text-sm font-bold text-brand-blue font-mono">4 - 5 Europalés (12 m³)</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-center text-xs">
+              <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                <span class="block text-slate-400 text-[10px] uppercase font-semibold">Tara</span>
+                <span class="font-bold text-slate-800 font-mono">2.250 kg</span>
+              </div>
+              <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                <span class="block text-slate-400 text-[10px] uppercase font-semibold">MMA</span>
+                <span class="font-bold text-slate-800 font-mono">3.500 kg</span>
+              </div>
+              <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                <span class="block text-brand-accent text-[10px] uppercase font-semibold">Carga Útil</span>
+                <span class="font-bold text-brand-accent font-mono">1.250 kg</span>
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <i class="fa-solid fa-bullseye text-brand-accent"></i> Finalidad Operativa
+              </h4>
+              <p class="text-xs text-slate-600 leading-relaxed bg-white p-3 rounded-lg border border-slate-100">
+                Repartos urgentes <strong>Just-In-Time (JIT)</strong> y acceso libre a la <strong>ZBE del Centro de Málaga (ORD-001)</strong>. Iluminación profesional, placas electrónicas y recambios críticos.
+              </p>
+            </div>
+          </div>
+
+          <div class="p-4 bg-slate-100/60 border-t border-slate-200 flex justify-between items-center text-xs font-medium">
+            <span class="text-emerald-700 flex items-center gap-1">
+              <i class="fa-solid fa-leaf"></i> Etiqueta CERO DGT
+            </span>
+            <span class="text-slate-500">Málaga Centro ZBE</span>
+          </div>
+        </div>
+
+        <!-- Vehículo 2 -->
+        <div class="group bg-slate-50 hover:bg-white rounded-2xl border-2 border-brand-blue/20 hover:border-brand-blue transition-all duration-300 shadow-md hover:shadow-2xl flex flex-col overflow-hidden relative">
+          <div class="absolute -top-1 -right-1">
+            <span class="bg-brand-blue text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider shadow">Ruta Consolidada</span>
+          </div>
+
+          <div class="p-6 border-b border-slate-100 bg-gradient-to-r from-sky-50 to-blue-50 flex items-start justify-between">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-brand-blue bg-white px-2 py-0.5 rounded border border-slate-200">VEC-02 · 9102 KVB</span>
+              <h3 class="text-xl font-bold text-brand-navy mt-1">Mercedes-Benz Atego 1224</h3>
+              <p class="text-xs text-slate-500">Caja Cerrada + Trampilla · Chófer: Roberto Sánchez</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center text-brand-blue">
+              <i class="fa-solid fa-truck text-xl"></i>
+            </div>
+          </div>
+
+          <div class="p-6 flex-1 space-y-4">
+            <div class="bg-blue-50 p-3 rounded-xl border border-blue-100 flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-700">Espacio Disponible:</span>
+              <span class="text-sm font-bold text-brand-navy font-mono">14 - 16 Europalés (38 m³)</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-center text-xs">
+              <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                <span class="block text-slate-400 text-[10px] uppercase font-semibold">Tara</span>
+                <span class="font-bold text-slate-800 font-mono">5.400 kg</span>
+              </div>
+              <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                <span class="block text-slate-400 text-[10px] uppercase font-semibold">MMA</span>
+                <span class="font-bold text-slate-800 font-mono">12.000 kg</span>
+              </div>
+              <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                <span class="block text-brand-blue text-[10px] uppercase font-semibold">Carga Útil</span>
+                <span class="font-bold text-brand-blue font-mono">6.600 kg</span>
+              </div>
+            </div>
+
+            <div class="bg-amber-50 p-2.5 rounded-lg border border-amber-200 flex items-center gap-2 text-amber-900 text-xs">
+              <i class="fa-solid fa-dolly text-amber-600"></i>
+              <span><strong>Plataforma Trasera (1.500 kg):</strong> Descarga autónoma en Muelle de Poniente y Marbella.</span>
+            </div>
+
+            <div class="pt-1">
+              <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <i class="fa-solid fa-bullseye text-brand-blue"></i> Finalidad Operativa
+              </h4>
+              <p class="text-xs text-slate-600 leading-relaxed bg-white p-3 rounded-lg border border-slate-100">
+                Consolida <strong>ORD-002 + ORD-003 (4.150 kg / 9 palés)</strong>: paneles de control de baja tensión e inversores solares para parques fotovoltaicos.
+              </p>
+            </div>
+          </div>
+
+          <div class="p-4 bg-slate-100/60 border-t border-slate-200 flex justify-between items-center text-xs font-medium">
+            <span class="text-brand-navy flex items-center gap-1">
+              <i class="fa-solid fa-shield-halved"></i> Caja Cerrada Rígida
+            </span>
+            <span class="text-slate-500">Puerto Málaga & Marbella</span>
+          </div>
+        </div>
+
+        <!-- Vehículo 3 -->
+        <div class="group bg-slate-50 hover:bg-white rounded-2xl border border-slate-200 hover:border-brand-navy transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col overflow-hidden">
+          <div class="p-6 border-b border-slate-100 bg-gradient-to-r from-slate-100 to-sky-50 flex items-start justify-between">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-brand-blue bg-white px-2 py-0.5 rounded border border-slate-200">VEC-03 · 3341 MHT</span>
+              <h3 class="text-xl font-bold text-brand-navy mt-1">Volvo FL 250</h3>
+              <p class="text-xs text-slate-500">Tauliner Lona Lateral · Chófer: David Carmona</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center text-brand-navy">
+              <i class="fa-solid fa-truck-moving text-xl"></i>
+            </div>
+          </div>
+
+          <div class="p-6 flex-1 space-y-4">
+            <div class="bg-sky-50/70 p-3 rounded-xl border border-sky-100 flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-700">Espacio Disponible:</span>
+              <span class="text-sm font-bold text-brand-blue font-mono">18 - 20 Europalés (48 m³)</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-center text-xs">
+              <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                <span class="block text-slate-400 text-[10px] uppercase font-semibold">Tara</span>
+                <span class="font-bold text-slate-800 font-mono">7.200 kg</span>
+              </div>
+              <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                <span class="block text-slate-400 text-[10px] uppercase font-semibold">MMA</span>
+                <span class="font-bold text-slate-800 font-mono">18.000 kg</span>
+              </div>
+              <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                <span class="block text-brand-navy text-[10px] uppercase font-semibold">Carga Útil</span>
+                <span class="font-bold text-brand-navy font-mono">10.800 kg</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-100 p-2.5 rounded-lg border border-slate-200 flex items-center gap-2 text-slate-800 text-xs">
+              <i class="fa-solid fa-arrows-left-right text-slate-600"></i>
+              <span><strong>Lona Tauliner Corredera:</strong> Carga lateral ágil para grúas y carretillas industriales.</span>
+            </div>
+
+            <div class="pt-1">
+              <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <i class="fa-solid fa-bullseye text-brand-navy"></i> Finalidad Operativa
+              </h4>
+              <p class="text-xs text-slate-600 leading-relaxed bg-white p-3 rounded-lg border border-slate-100">
+                <strong>Bobinas pesadas de cable eléctrico de media y alta tensión</strong>, transformadores y canales metálicos para parques eólicos y plantas industriales en Andalucía.
+              </p>
+            </div>
+          </div>
+
+          <div class="p-4 bg-slate-100/60 border-t border-slate-200 flex justify-between items-center text-xs font-medium">
+            <span class="text-brand-navy flex items-center gap-1">
+              <i class="fa-solid fa-weight-hanging"></i> 10.8 Toneladas Capacidad
+            </span>
+            <span class="text-slate-500">Reserva Pesada Regional</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FASE 2 (PRÁCTICA 1): Retos del Cliente y Problemas del Modelo Tradicional -->
+  <section id="retos" class="py-20 bg-slate-900 text-white relative">
+    <div class="absolute inset-0 bg-dots opacity-20 pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div class="lg:col-span-5 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue text-brand-cyan text-xs font-mono font-semibold">
+            <i class="fa-solid fa-industry"></i> DIAGNÓSTICO PREVIO · PRÁCTICA 1
+          </div>
+          
+          <h2 class="text-3xl font-extrabold tracking-tight">
+            De los Archivadores de Palanca de 2005 al Ecosistema TMS
+          </h2>
+          
+          <p class="text-slate-300 text-sm leading-relaxed">
+            Nuestros clientes B2B proveen aparellaje a plantas de ensamblaje, puertos y parques solares. El modelo tradicional en papel generaba cuellos de botella insostenibles que hemos erradicado con el TMS.
+          </p>
+
+          <div class="space-y-3 pt-2">
+            <div class="flex items-start space-x-3 p-3 rounded-xl bg-slate-800/80 border border-slate-700">
+              <div class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-stopwatch text-sm"></i>
+              </div>
+              <div class="text-xs">
+                <span class="font-bold text-white block">Ventanas Horarias Exactas</span>
+                <span class="text-slate-300">Entregas en fecha y minuto acordado. Un retraso paraliza cuadrillas enteras de montaje.</span>
+              </div>
+            </div>
+
+            <div class="flex items-start space-x-3 p-3 rounded-xl bg-slate-800/80 border border-slate-700">
+              <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-microchip text-sm"></i>
+              </div>
+              <div class="text-xs">
+                <span class="font-bold text-white block">Carga de Máxima Delicadeza</span>
+                <span class="text-slate-300">Inversores solares, cuadros de baja tensión, transformadores y componentes de alto valor.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7">
+          <div class="bg-slate-800/60 rounded-2xl p-6 sm:p-8 border border-slate-700">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+              <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+              <span>Los 4 Cuellos de Botella del Papel Superados</span>
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-rose-400 text-xs font-bold uppercase"><i class="fa-solid fa-location-crosshairs mr-1"></i> Punto Ciego</span>
+                  <span class="text-[10px] bg-rose-900/50 text-rose-300 px-2 py-0.5 rounded">Resuelto con My Maps</span>
+                </div>
+                <h4 class="text-sm font-bold text-slate-200">Cero Trazabilidad en Obra</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                  Sin GPS en vivo, el cliente ignoraba cuándo llegaba su mercancía. Hoy lo visualiza en tiempo real.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-amber-400 text-xs font-bold uppercase"><i class="fa-solid fa-file-excel mr-1"></i> Vulnerabilidad</span>
+                  <span class="text-[10px] bg-amber-900/50 text-amber-300 px-2 py-0.5 rounded">Resuelto con e-CMR</span>
+                </div>
+                <h4 class="text-sm font-bold text-slate-200">Albaranes en Papel Perdidos</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                  Los talonarios autocopiantes retrasaban semanas la facturación. Ahora cada orden genera su PDF `doc_ecmr`.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-orange-400 text-xs font-bold uppercase"><i class="fa-solid fa-clock mr-1"></i> Ineficiencia</span>
+                  <span class="text-[10px] bg-orange-900/50 text-orange-300 px-2 py-0.5 rounded">Resuelto con Ventanas</span>
+                </div>
+                <h4 class="text-sm font-bold text-slate-200">Colapso en Muelles de Descarga</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                  La tabla `Clientes_B2B` parametriza ventanas horarias estrictas vinculadas con `BUSCARX`.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-purple-400 text-xs font-bold uppercase"><i class="fa-solid fa-box-open mr-1"></i> Disputas</span>
+                  <span class="text-[10px] bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded">Resuelto con IoT</span>
+                </div>
+                <h4 class="text-sm font-bold text-slate-200">Roturas y Humedad Oculta</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                  Sensores triaxiales de impacto y humedad monitorizan cada palé de alta/baja tensión.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FASE 3 (PRÁCTICA 1): Matriz de Soluciones Tecnológicas Accesibles -->
+  <section id="tecnologia" class="py-20 bg-slate-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-14">
+        <span class="text-xs font-bold text-brand-blue uppercase tracking-widest bg-sky-100 px-3 py-1 rounded-full border border-sky-200">
+          ECOSISTEMA TECNOLÓGICO 4.0
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-navy mt-3">
+          Matriz de Soluciones Digitales Accesibles
+        </h2>
+        <p class="text-slate-600 mt-3 text-base">
+          Cuatro pilares convergentes integrados con nuestro TMS: Sensores IoT, Blockchain e-CMR, Inteligencia Artificial y Big Data.
+        </p>
+      </div>
+
+      <!-- Interactive Tab Selector for Solutions -->
+      <div class="flex flex-wrap justify-center gap-2 mb-10" id="techTabButtons">
+        <button onclick="switchTechTab('iot')" id="btn-iot" class="px-5 py-3 rounded-xl font-bold text-sm bg-brand-navy text-white shadow-md flex items-center gap-2 transition-all">
+          <i class="fa-solid fa-tower-broadcast text-brand-cyan"></i> Sensores IoT & Telemática
+        </button>
+        <button onclick="switchTechTab('blockchain')" id="btn-blockchain" class="px-5 py-3 rounded-xl font-bold text-sm bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 flex items-center gap-2 transition-all">
+          <i class="fa-solid fa-link text-indigo-500"></i> Blockchain & e-CMR
+        </button>
+        <button onclick="switchTechTab('ai')" id="btn-ai" class="px-5 py-3 rounded-xl font-bold text-sm bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 flex items-center gap-2 transition-all">
+          <i class="fa-solid fa-brain text-sky-500"></i> Inteligencia Artificial (IA)
+        </button>
+        <button onclick="switchTechTab('bigdata')" id="btn-bigdata" class="px-5 py-3 rounded-xl font-bold text-sm bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 flex items-center gap-2 transition-all">
+          <i class="fa-solid fa-chart-pie text-emerald-500"></i> Big Data & Analítica
+        </button>
+      </div>
+
+      <!-- Tab Content Panels -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-10 shadow-lg">
+        
+        <!-- Panel 1: IoT -->
+        <div id="panel-iot" class="tech-panel grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div class="space-y-4">
+            <div class="inline-flex items-center gap-2 text-xs font-bold text-brand-accent uppercase tracking-wider">
+              <i class="fa-solid fa-satellite"></i> IoT & Monitorización Activa
+            </div>
+            <h3 class="text-2xl font-bold text-brand-navy">Control Físico Absoluto de la Flota y el Palé</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">
+              Equipamos los vehículos con módulos <strong>GPS/GPRS telemáticos</strong> y sensores integrados directamente en los bultos de aparellaje delicado.
+            </p>
+            <ul class="space-y-2 text-sm text-slate-700">
+              <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1"></i><span><strong>Geofencing en obra:</strong> Alerta automática a 5 km del destino.</span></li>
+              <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1"></i><span><strong>Acelerómetros triaxiales:</strong> Detección de golpes en cuadros eléctricos.</span></li>
+              <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1"></i><span><strong>Balizas BLE:</strong> Registro automático al cruzar el muelle del cliente.</span></li>
+            </ul>
+          </div>
+          <div class="bg-slate-900 rounded-xl p-6 text-white font-mono text-xs space-y-3 border border-slate-800">
+            <div class="flex justify-between text-slate-400 border-b border-slate-800 pb-2">
+              <span>TELEMETRY_NODE #VEC-02</span>
+              <span class="text-emerald-400">SIGNAL: 99%</span>
+            </div>
+            <div class="flex justify-between"><span>Ubicación:</span><span class="text-slate-200">Muelle de Poniente (Puerto Málaga)</span></div>
+            <div class="flex justify-between"><span>Impacto Máximo:</span><span class="text-emerald-400">0.19 g (Seguro &lt; 0.5g)</span></div>
+            <div class="flex justify-between"><span>Humedad Ambiente:</span><span class="text-sky-300">42% HR (Sin condensación)</span></div>
+          </div>
+        </div>
+
+        <!-- Panel 2: Blockchain & e-CMR -->
+        <div id="panel-blockchain" class="tech-panel hidden grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div class="space-y-4">
+            <div class="inline-flex items-center gap-2 text-xs font-bold text-indigo-600 uppercase tracking-wider">
+              <i class="fa-solid fa-fingerprint"></i> e-CMR & POD Digital
+            </div>
+            <h3 class="text-2xl font-bold text-brand-navy">Adiós al Papel: Comprobante Digital (`doc_ecmr_001.pdf`)</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">
+              Cada orden en nuestra tabla `Ordenes_Transporte` lleva asociado su archivo <strong>POD Digital (`e-CMR`)</strong> firmado en tablet 5G, disparando la facturación automática sin esperas.
+            </p>
+          </div>
+          <div class="bg-indigo-950/30 rounded-xl p-6 border border-indigo-200 space-y-2 text-xs font-mono text-slate-700">
+            <p><strong>Documento POD:</strong> doc_ecmr_001.pdf (ORD-001)</p>
+            <p><strong>Firmante Receptor:</strong> Antonio Ruiz (CLI-001)</p>
+            <p><strong>Ubicación Verificada:</strong> C/ Carretería 45, Málaga</p>
+            <p class="text-emerald-700 font-bold pt-1">✓ Factura emitida automáticamente al ERP.</p>
+          </div>
+        </div>
+
+        <!-- Panel 3: IA -->
+        <div id="panel-ai" class="tech-panel hidden grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div class="space-y-4">
+            <div class="inline-flex items-center gap-2 text-xs font-bold text-sky-600 uppercase tracking-wider">
+              <i class="fa-solid fa-robot"></i> Inteligencia Artificial Supervisada
+            </div>
+            <h3 class="text-2xl font-bold text-brand-navy">Consolidación de Cargas y ETA Dinámico</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">
+              Utilizamos IA para estructurar fórmulas `BUSCARX`, consolidar pedidos y recalcular el ETA en la autovía A-7 hacia Marbella, siempre bajo auditoría humana para evitar sobrecargas ilegales.
+            </p>
+          </div>
+          <div class="bg-slate-900 rounded-xl p-6 text-white space-y-2 font-mono text-xs border border-slate-800">
+            <div class="text-sky-400 font-bold">ALGORITMO_PREDICTIVO_ETA (ORD-003)</div>
+            <div>Ruta: Puerto Málaga → P.I. La Ermita (Marbella)</div>
+            <div class="text-amber-400">Aviso Tráfico A-7: Ajuste de ventana notificado a Elena Torres (CLI-003)</div>
+          </div>
+        </div>
+
+        <!-- Panel 4: Big Data -->
+        <div id="panel-bigdata" class="tech-panel hidden grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div class="space-y-4">
+            <div class="inline-flex items-center gap-2 text-xs font-bold text-emerald-600 uppercase tracking-wider">
+              <i class="fa-solid fa-chart-line"></i> Analítica Avanzada & Big Data
+            </div>
+            <h3 class="text-2xl font-bold text-brand-navy">Métricas de Ocupación y Reducción de Viajes en Vacío</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">
+              Consolidar las órdenes ORD-002 y ORD-003 en el Mercedes Atego eleva la ocupación al 62,88% de su carga útil, ahorrando un viaje completo por la Costa del Sol.
+            </p>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3 text-xs">
+            <div class="flex justify-between font-bold"><span>Ocupación VEC-02 Consolidado</span><span class="text-brand-blue">62,88% (4.150 kg)</span></div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden"><div class="bg-brand-blue h-full w-[62.88%]"></div></div>
+            <div class="flex justify-between font-bold"><span>Cumplimiento Normativa MMA</span><span class="text-emerald-600">100% Legal</span></div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden"><div class="bg-emerald-500 h-full w-full"></div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FASE 4 (PRÁCTICA 1): Sostenibilidad, ZBE Málaga y Drones de Almacén -->
+  <section id="sostenibilidad" class="py-20 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-14">
+        <span class="text-xs font-bold text-emerald-800 uppercase tracking-widest bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
+          SOSTENIBILIDAD REALISTA & NORMATIVA AESA
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-navy mt-3">
+          ZBE Málaga, Recarga 22 kW y Drones RFID Intramuros
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-gradient-to-b from-emerald-50/50 to-white p-6 rounded-2xl border border-emerald-200 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xl mb-4">
+            <i class="fa-solid fa-plug-circle-bolt"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">Furgón Eléctrico CERO (VEC-01)</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Iveco eDaily (4821 LZX) con acceso libre a la ZBE de Málaga (C/ Carretería 45) respetando siempre su límite legal de 1.250 kg de carga útil.
+          </p>
+        </div>
+
+        <div class="bg-gradient-to-b from-sky-50/50 to-white p-6 rounded-2xl border border-sky-200 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-brand-blue text-white flex items-center justify-center text-xl mb-4">
+            <i class="fa-solid fa-charging-station"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">Cargador Propio 22 kW en Nave</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Instalado en nuestra base de C/ Esteban Salazar Chapela (Pol. Guadalhorce) para recarga nocturna en tarifa valle con ahorro del 70%.
+          </p>
+        </div>
+
+        <div class="bg-gradient-to-b from-indigo-50/50 to-white p-6 rounded-2xl border border-indigo-200 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xl mb-4">
+            <i class="fa-solid fa-helicopter"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">Drones RFID en Almacén (Corrección IA)</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Descartado el vuelo urbano de cargas pesadas por prohibición de AESA, empleamos minidrones intramuros con lector RFID/QR para inventario en estanterías altas.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIMULADOR INTERACTIVO DE ENVÍOS Y TELEMETRÍA EN DIRECTO -->
+  <section id="simulador" class="py-20 bg-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-14">
+        <span class="text-xs font-bold text-brand-blue uppercase tracking-widest bg-sky-100 px-3 py-1 rounded-full border border-sky-300">
+          Herramienta Algorítmica Interactiva
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-navy mt-3">
+          Simulador de Asignación de Flota & Telemetría
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-5 bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-md space-y-6">
+          <h3 class="text-lg font-bold text-slate-900 border-b pb-3 flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-brand-accent"></i> Parámetros del Envío
+          </h3>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">1. Naturaleza de la Carga</label>
+            <select id="simCargo" onchange="runSimulation()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm font-medium text-slate-800">
+              <option value="recambios">Focos LED y recambios urgentes (JIT &lt; 1.250 kg)</option>
+              <option value="cuadros">Paneles BT e Inversores Solares (4.150 kg consolidados)</option>
+              <option value="bobinas">Bobinas pesadas de cobre y transformadores (&gt; 6.000 kg)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">2. Destino del Suministro</label>
+            <select id="simDestination" onchange="runSimulation()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm font-medium text-slate-800">
+              <option value="malaga_centro">C/ Carretería 45 · Málaga Centro (Zona ZBE)</option>
+              <option value="puerto_marbella">Ruta Consolidada: Puerto de Málaga + Marbella</option>
+              <option value="parque_eolico">Parque Eólico / Solar Regional (Andalucía)</option>
+            </select>
+          </div>
+
+          <button onclick="runSimulation()" class="w-full py-3.5 rounded-xl bg-brand-navy hover:bg-brand-blue text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-arrows-rotate"></i> Recalcular Asignación Óptima
+          </button>
+        </div>
+
+        <div class="lg:col-span-7 bg-brand-dark rounded-2xl p-6 sm:p-8 text-white border border-slate-800 shadow-xl flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center border-b border-slate-800 pb-4 mb-6">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                <h4 class="font-mono text-sm font-bold text-brand-cyan">TELEMETRÍA & ASIGNACIÓN TMS</h4>
+              </div>
+              <span id="simTagBadge" class="text-xs px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30">
+                DISTINTIVO CERO
+              </span>
+            </div>
+
+            <div class="bg-slate-900/90 rounded-2xl p-5 border border-slate-800 mb-6">
+              <div class="text-xs uppercase font-mono text-slate-400 mb-1">Vehículo Asignado por el TMS:</div>
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <div>
+                  <h5 id="simVehicleName" class="text-xl font-extrabold text-white">VEC-01: Iveco eDaily Eléctrica (4821 LZX)</h5>
+                  <p id="simVehicleDesc" class="text-xs text-sky-300 mt-0.5">Tara: 2.250kg | MMA: 3.500kg | Carga Útil: 1.250kg | 4-5 Palés (12 m³)</p>
+                </div>
+                <div id="simVehicleIcon" class="w-12 h-12 rounded-xl bg-brand-blue/40 border border-brand-cyan/30 flex items-center justify-center text-brand-cyan text-xl">
+                  <i class="fa-solid fa-van-shuttle"></i>
+                </div>
+              </div>
+              <div id="simJustification" class="mt-3 pt-3 border-t border-slate-800/80 text-xs text-slate-300 leading-relaxed">
+                Asignado a ORD-001 (280 kg, 22,4% carga útil) por cumplimiento estricto de la ZBE del centro de Málaga.
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-center">
+                <span class="text-[10px] uppercase font-mono text-slate-400 block">Fuerza G Baches</span>
+                <span id="simGForce" class="text-base font-bold text-emerald-400 font-mono">0.12 g</span>
+              </div>
+              <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-center">
+                <span class="text-[10px] uppercase font-mono text-slate-400 block">Humedad Palé</span>
+                <span id="simHumidity" class="text-base font-bold text-sky-400 font-mono">38 %</span>
+              </div>
+              <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-center">
+                <span class="text-[10px] uppercase font-mono text-slate-400 block">ETA Tráfico IA</span>
+                <span id="simEta" class="text-base font-bold text-amber-300 font-mono">14 min</span>
+              </div>
+              <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-center">
+                <span class="text-[10px] uppercase font-mono text-slate-400 block">POD Digital</span>
+                <span id="simEcmr" class="text-base font-bold text-indigo-400 font-mono">e-CMR Activo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Corporativo -->
+  <footer class="bg-brand-dark text-slate-300 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        
+        <div class="space-y-4">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-blue to-brand-cyan flex items-center justify-center text-white">
+              <i class="fa-solid fa-truck-bolt text-lg"></i>
+            </div>
+            <div>
+              <span class="font-extrabold text-white text-base tracking-tight">ElectroLogística</span>
+              <p class="text-[10px] text-slate-400">& Suministros del Sur S.L.</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Especialistas en transporte de aparellaje eléctrico, inversores solares y bobinas de alta tensión con sistema operativo TMS en la nube.
+          </p>
+          <div class="text-xs text-slate-400 space-y-1">
+            <p><i class="fa-solid fa-location-dot mr-2 text-brand-cyan"></i> C/ Esteban Salazar Chapela, Pol. Ind. Guadalhorce, Málaga</p>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">
+            Módulos Práctica 2 (TMS)
+          </h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="#operativa-tms" onclick="switchTmsTab('clientes')" class="hover:text-brand-cyan transition-colors">1. Área de Clientes (Formulario B2B)</a></li>
+            <li><a href="#operativa-tms" onclick="switchTmsTab('control')" class="hover:text-brand-cyan transition-colors">2. Centro de Control TMS (3 Tablas)</a></li>
+            <li><a href="#operativa-tms" onclick="switchTmsTab('rutas')" class="hover:text-brand-cyan transition-colors">3. Trazabilidad y Rutas (My Maps)</a></li>
+            <li><a href="#operativa-tms" onclick="switchTmsTab('memoria')" class="hover:text-brand-cyan transition-colors">4. Memoria Técnica TMS & Errores IA</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">
+            Módulos Práctica 1
+          </h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="#flota" class="hover:text-brand-cyan transition-colors">Dimensionamiento de Flota</a></li>
+            <li><a href="#retos" class="hover:text-brand-cyan transition-colors">Diagnóstico del Modelo Analógico</a></li>
+            <li><a href="#tecnologia" class="hover:text-brand-cyan transition-colors">Matriz IoT, Blockchain, IA & Big Data</a></li>
+            <li><a href="#sostenibilidad" class="hover:text-brand-cyan transition-colors">ZBE Málaga & Drones RFID</a></li>
+          </ul>
+        </div>
+
+        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-2">
+          <span class="text-[10px] font-bold text-brand-cyan uppercase tracking-wider block">Proyecto Académico Logístico</span>
+          <p class="text-xs font-bold text-white">Grado Superior en Comercio Internacional y Logística</p>
+          <p class="text-[11px] text-slate-300">Módulo: Digitalización Aplicada al Transporte de Mercancías (Prácticas 1 y 2)</p>
+          <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400">
+            <span class="block text-slate-300 font-semibold mb-1">Equipo de Trabajo:</span>
+            <ul class="space-y-0.5">
+              <li><i class="fa-solid fa-user-check mr-1 text-sky-400"></i> Samy</li>
+              <li><i class="fa-solid fa-user-check mr-1 text-sky-400"></i> Hugo</li>
+              <li><i class="fa-solid fa-user-check mr-1 text-sky-400"></i> Daniel</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-8 border-t border-slate-800 text-center sm:flex sm:justify-between sm:items-center text-xs text-slate-500">
+        <p>&copy; 2005 - 2026 ElectroLogística & Suministros del Sur S.L. Todos los derechos reservados.</p>
+        <p class="mt-2 sm:mt-0">Arquitectura TMS Relacional · Cumplimiento LOTT & AESA · ZBE Málaga</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- SCRIPTS INTERACTIVOS (BASE DE DATOS RELACIONAL TMS, MAPA Y SIMULADOR) -->
+  <!-- ===================================================================== -->
+  <script>
+    // 1. Directorio Maestro de Clientes (Tabla 1: Clientes_B2B) para simulación BUSCARX
+    const clientsDB = {
+      "CLI-001": {
+        name: "SUMINISTROS ILUMINACIÓN CENTRO S.L. (B93112233)",
+        address: "C/ CARRETERÍA 45, DISTRITO CENTRO (ZBE), 29008 MÁLAGA",
+        shortDest: "C/ Carretería (Málaga)",
+        window: "08:30 - 10:30 H",
+        defaultVehicle: "VEC-01"
+      },
+      "CLI-002": {
+        name: "MONTAJES ELECTROMECÁNICOS PUERTO S.L. (B93112233)",
+        address: "MUELLE DE PONIENTE S/N, RECINTO PORTUARIO, 29001 MÁLAGA",
+        shortDest: "Puerto de Málaga",
+        window: "10:00 - 12:00 H",
+        defaultVehicle: "VEC-02"
+      },
+      "CLI-003": {
+        name: "ANDALUSIÁTICA RENOVABLES S.A. (A29182345)",
+        address: "POLÍGONO INDUSTRIAL LA ERMITA, C/ PIRITA 8, 29603 MARBELLA (MÁLAGA)",
+        shortDest: "Marbella, Málaga",
+        window: "09:00 - 11:00 H",
+        defaultVehicle: "VEC-02"
+      },
+      "CLI-004": {
+        name: "INFRAESTRUCTURAS Y REDES DEL NORTE S.A. (A28445566)",
+        address: "POLÍGONO INDUSTRIAL AS GÁNDARAS, C/ B 12, 27003 LUGO (GALICIA)",
+        shortDest: "Lugo, Galicia",
+        window: "08:30 - 11:30 H",
+        defaultVehicle: "VEC-04"
+      },
+      "CLI-005": {
+        name: "EUROELECTRICAL COMPONENTS GMBH (DE319827401)",
+        address: "INDUSTRIESTRAßE 24, 60314 FRANKFURT AM MAIN, ALEMANIA",
+        shortDest: "Frankfurt, Alemania",
+        window: "09:00 - 14:00 H",
+        defaultVehicle: "VEC-05"
+      },
+      "CLI-006": {
+        name: "PORTUGUESA DE TRANSFORMADORES S.A. (PT509812345)",
+        address: "ZONA INDUSTRIAL DO PORTO, LOTE 14, 4400-346 VILA NOVA DE GAIA, OPORTO",
+        shortDest: "Oporto, Portugal",
+        window: "10:00 - 16:00 H",
+        defaultVehicle: "VEC-06"
+      }
+    };
+
+    // 2. Estado Inicial de Órdenes (Tabla 3: Ordenes_Transporte)
+    let ordersDB = [
+      {
+        id: "ORD-001",
+        date: "2026-10-15",
+        clientId: "CLI-001",
+        vehicleId: "VEC-01",
+        desc: "Focos LED e Iluminación Prof.",
+        packages: "8 Cajas",
+        weight: 280,
+        volume: 1.8,
+        origin: "Nave Guadalhorce",
+        dest: "C/ Carretería (Málaga)",
+        window: "08:30 - 10:30 H",
+        status: "Entregado",
+        pod: "doc_ecmr_001.pdf"
+      },
+      {
+        id: "ORD-002",
+        date: "2026-10-15",
+        clientId: "CLI-002",
+        vehicleId: "VEC-02 (Consolidado)",
+        desc: "Paneles de Control de Baja Tensión",
+        packages: "3 Palés",
+        weight: 950,
+        volume: 4.2,
+        origin: "Nave Guadalhorce",
+        dest: "Puerto de Málaga",
+        window: "10:00 - 12:00 H",
+        status: "En ruta",
+        pod: "doc_ecmr_002.pdf"
+      },
+      {
+        id: "ORD-003",
+        date: "2026-10-15",
+        clientId: "CLI-003",
+        vehicleId: "VEC-02 / VEC-03",
+        desc: "Inversores Solares y Cuadros",
+        packages: "6 Palés",
+        weight: 3200,
+        volume: 14.0,
+        origin: "Nave Guadalhorce",
+        dest: "Marbella, Málaga",
+        window: "09:00 - 11:00 H",
+        status: "Planificado",
+        pod: "doc_ecmr_003.pdf"
+      },
+      {
+        id: "ORD-004",
+        date: "2026-10-15",
+        clientId: "CLI-004",
+        vehicleId: "VEC-04 (Ext.)",
+        desc: "Armarios Metálicos y Cableado Obra Civil",
+        packages: "10 Palés",
+        weight: 5100,
+        volume: 22.0,
+        origin: "Nave Guadalhorce",
+        dest: "Lugo, Galicia",
+        window: "08:30 - 11:30 H",
+        status: "Planificado",
+        pod: "doc_ecmr_004.pdf"
+      },
+      {
+        id: "ORD-005",
+        date: "2026-10-15",
+        clientId: "CLI-005",
+        vehicleId: "VEC-05 (Ext.)",
+        desc: "Componentes Electrónicos de Alta Tensión",
+        packages: "12 Palés",
+        weight: 4800,
+        volume: 25.0,
+        origin: "Nave Guadalhorce",
+        dest: "Frankfurt, Alemania",
+        window: "09:00 - 14:00 H",
+        status: "Planificado",
+        pod: "doc_ecmr_005.pdf"
+      },
+      {
+        id: "ORD-006",
+        date: "2026-10-15",
+        clientId: "CLI-006",
+        vehicleId: "VEC-06 (Ext.)",
+        desc: "Bobinas Pesadas de Cobre y Transformadores",
+        packages: "14 Palés",
+        weight: 6500,
+        volume: 28.0,
+        origin: "Nave Guadalhorce",
+        dest: "Oporto, Portugal",
+        window: "10:00 - 16:00 H",
+        status: "Planificado",
+        pod: "doc_ecmr_006.pdf"
+      }
+    ];
+
+    // Renderizar Tabla 3 con selector desplegable de validación de estados
+    function renderOrdersTable() {
+      const tbody = document.getElementById("ordersTableBody");
+      const filter = document.getElementById("filterOrderStatus").value;
+      tbody.innerHTML = "";
+
+      const statusStyles = {
+        "Entregado": "bg-emerald-100 text-emerald-800 border-emerald-300",
+        "En ruta": "bg-amber-100 text-amber-800 border-amber-300",
+        "Planificado": "bg-sky-100 text-sky-800 border-sky-300",
+        "Pendiente": "bg-slate-100 text-slate-700 border-slate-300",
+        "Incidencia": "bg-rose-100 text-rose-800 border-rose-300"
+      };
+
+      ordersDB.forEach((ord, index) => {
+        if (filter !== "ALL" && ord.status !== filter) return;
+
+        const badgeClass = statusStyles[ord.status] || statusStyles["Planificado"];
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition-colors";
+        tr.innerHTML = `
+          <td class="py-3 px-3 font-mono font-bold text-brand-navy">${ord.id}</td>
+          <td class="py-3 px-3 font-mono text-slate-600">${ord.date}</td>
+          <td class="py-3 px-3 font-mono font-bold text-brand-blue">${ord.clientId}</td>
+          <td class="py-3 px-3 font-mono font-semibold text-slate-800">${ord.vehicleId}</td>
+          <td class="py-3 px-3 font-medium text-slate-900">${ord.desc}</td>
+          <td class="py-3 px-3 font-mono">${ord.packages}</td>
+          <td class="py-3 px-3 text-right font-mono font-bold">${ord.weight.toLocaleString('es-ES')}</td>
+          <td class="py-3 px-3 text-right font-mono">${ord.volume.toFixed(1).replace('.', ',')}</td>
+          <td class="py-3 px-3 text-slate-700"><span class="text-slate-400">${ord.origin} →</span> <strong>${ord.dest}</strong></td>
+          <td class="py-3 px-3 font-mono text-[11px] text-slate-600">${ord.window}</td>
+          <td class="py-3 px-3">
+            <select onchange="updateOrderStatus(${index}, this.value)" class="px-2 py-1 rounded-lg border text-[11px] font-bold ${badgeClass} focus:outline-none cursor-pointer">
+              <option value="Pendiente" ${ord.status === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
+              <option value="Planificado" ${ord.status === 'Planificado' ? 'selected' : ''}>Planificado</option>
+              <option value="En ruta" ${ord.status === 'En ruta' ? 'selected' : ''}>En ruta</option>
+              <option value="Entregado" ${ord.status === 'Entregado' ? 'selected' : ''}>Entregado</option>
+              <option value="Incidencia" ${ord.status === 'Incidencia' ? 'selected' : ''}>Incidencia</option>
+            </select>
+          </td>
+          <td class="py-3 px-3 font-mono text-[11px] text-indigo-600 font-semibold">
+            <i class="fa-regular fa-file-pdf mr-1"></i>${ord.pod}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updateOrderStatus(index, newStatus) {
+      ordersDB[index].status = newStatus;
+      renderOrdersTable();
+    }
+
+    // Simulación de fórmula =BUSCARX en el Formulario de Clientes (Pestaña 1)
+    function autoFillClient() {
+      const cid = document.getElementById("formClientId").value;
+      const nameInput = document.getElementById("formCompanyName");
+      const addrInput = document.getElementById("formAddress");
+      const winInput = document.getElementById("formTimeWindow");
+
+      if (clientsDB[cid]) {
+        nameInput.value = clientsDB[cid].name;
+        addrInput.value = clientsDB[cid].address;
+        winInput.value = clientsDB[cid].window;
+        nameInput.readOnly = true;
+        nameInput.classList.add("bg-slate-100");
+      } else {
+        nameInput.value = "";
+        addrInput.value = "";
+        winInput.value = "09:00 - 13:00 H";
+        nameInput.readOnly = false;
+        nameInput.classList.remove("bg-slate-100");
+        nameInput.placeholder = "Escriba Razón Social y CIF...";
+      }
+    }
+
+    // Añadir nueva orden desde el formulario web a la Tabla 3 del TMS
+    function submitNewOrder(e) {
+      e.preventDefault();
+      const cid = document.getElementById("formClientId").value;
+      const date = document.getElementById("formDate").value;
+      const cargoRaw = document.getElementById("formCargoType").value;
+      const packages = document.getElementById("formPackages").value;
+      const weight = parseFloat(document.getElementById("formWeight").value) || 500;
+      const volume = parseFloat(document.getElementById("formVolume").value) || 2.5;
+      const windowTime = document.getElementById("formTimeWindow").value;
+      const addr = document.getElementById("formAddress").value;
+
+      const nextNum = ordersDB.length + 1;
+      const newId = "ORD-00" + nextNum;
+      const descClean = cargoRaw.includes("·") ? cargoRaw.split("·")[1].trim() : cargoRaw;
+
+      let assignedVeh = "VEC-02";
+      if (weight <= 1250 && addr.toUpperCase().includes("ZBE")) {
+        assignedVeh = "VEC-01";
+      } else if (weight > 6600) {
+        assignedVeh = "VEC-03";
+      }
+
+      const shortDest = clientsDB[cid] ? clientsDB[cid].shortDest : addr.substring(0, 22) + "...";
+
+      ordersDB.push({
+        id: newId,
+        date: date,
+        clientId: cid === "NUEVO" ? "CLI-00" + nextNum : cid,
+        vehicleId: assignedVeh,
+        desc: descClean,
+        packages: packages,
+        weight: weight,
+        volume: volume,
+        origin: "Nave Guadalhorce",
+        dest: shortDest,
+        window: windowTime,
+        status: "Pendiente",
+        pod: `doc_ecmr_00${nextNum}.pdf`
+      });
+
+      renderOrdersTable();
+
+      const banner = document.getElementById("orderSuccessBanner");
+      const text = document.getElementById("orderSuccessText");
+      text.innerHTML = `Orden <strong>${newId}</strong> (${weight} kg · ${packages}) registrada automáticamente con vehículo <strong>${assignedVeh}</strong> en estado <em>Pendiente</em>.`;
+      banner.classList.remove("hidden");
+    }
+
+    // Cambio entre las 4 Pestañas Operativas del TMS (Práctica 2)
+    let leafletMap = null;
+    function switchTmsTab(tabId) {
+      const tabs = ['clientes', 'control', 'rutas', 'memoria'];
+      tabs.forEach(t => {
+        const panel = document.getElementById('tms-panel-' + t);
+        const btn = document.getElementById('tms-btn-' + t);
+        if (panel) panel.classList.add('hidden');
+        if (btn) {
+          btn.className = "p-4 rounded-2xl font-bold text-left transition-all bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 flex items-center gap-3";
+        }
+      });
+
+      const activePanel = document.getElementById('tms-panel-' + tabId);
+      const activeBtn = document.getElementById('tms-btn-' + tabId);
+      if (activePanel) activePanel.classList.remove('hidden');
+      if (activeBtn) {
+        activeBtn.className = "p-4 rounded-2xl font-bold text-left transition-all bg-brand-navy text-white shadow-lg border-2 border-brand-cyan flex items-center gap-3";
+      }
+
+      if (tabId === 'rutas') {
+        setTimeout(() => {
+          initOrRefreshMap();
+        }, 150);
+      }
+    }
+
+    // Inicialización del Mapa Interactivo de Monitoreo de Rutas (Fase 4)
+    function initOrRefreshMap() {
+      if (leafletMap) {
+        leafletMap.invalidateSize();
+        return;
+      }
+
+      leafletMap = L.map('tmsMap').setView([36.64, -4.62], 10);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors · ElectroLogística TMS'
+      }).addTo(leafletMap);
+
+      function makePin(bgColor, label) {
+        return L.divIcon({
+          className: 'custom-pin',
+          html: `<div style="background:${bgColor};color:#07162c;font-weight:800;font-family:monospace;font-size:11px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,0.4);">${label}</div>`,
+          iconSize: [28, 28],
+          iconAnchor: [14, 14]
+        });
+      }
+
+      const baseCoords = [36.6853, -4.4712];
+      const cli1Coords = [36.7236, -4.4216]; // C/ Carretería 45
+      const cli2Coords = [36.7092, -4.4190]; // Muelle de Poniente Puerto Málaga
+      const cli3Coords = [36.5105, -4.8620]; // P.I. La Ermita Marbella
+      const cli4Coords = [43.0330, -7.5560]; // Lugo
+      const cli5Coords = [50.1260, 8.7380];  // Frankfurt
+      const cli6Coords = [41.1150, -8.6320]; // Oporto
+
+      // Marcador Base Central
+      L.marker(baseCoords, { icon: makePin('#10b981', 'BASE') }).addTo(leafletMap)
+        .bindPopup(`<b>🏠 BASE CENTRAL: Nave Guadalhorce</b><br>C/ Esteban Salazar Chapela, Málaga<br><b>Salida:</b> 08:00 H | <b>Retorno:</b> 13:30 H`);
+
+      // Parada 1: CLI-001
+      L.marker(cli1Coords, { icon: makePin('#38bdf8', 'P1') }).addTo(leafletMap)
+        .bindPopup(`<b>✅ PARADA 1 · CLI-001 (ORD-001)</b><br><b>Cliente:</b> Suministros Iluminación Centro S.L.<br><b>Dirección:</b> C/ Carretería 45 (ZBE Málaga)<br><b>Ventana:</b> 08:30 - 10:30 H (Llegada 08:30 H)<br><b>Mercancía:</b> 8 Cajas Focos LED (280 kg)<br><b>Vehículo:</b> VEC-01 (Iveco eDaily CERO)<br><b>Estado:</b> ENTREGADO (POD: doc_ecmr_001.pdf)`).openPopup();
+
+      // Parada 2: CLI-002
+      L.marker(cli2Coords, { icon: makePin('#f97316', 'P2') }).addTo(leafletMap)
+        .bindPopup(`<b>🚚 PARADA 2 · CLI-002 (ORD-002)</b><br><b>Cliente:</b> Montajes Electromecánicos Puerto S.L.<br><b>Dirección:</b> Muelle de Poniente s/n, Puerto Málaga<br><b>Ventana:</b> 10:00 - 12:00 H (Llegada 09:45 H)<br><b>Mercancía:</b> 3 Palés Paneles BT (950 kg)<br><b>Vehículo:</b> VEC-02 (Mercedes Atego Plataforma)<br><b>Estado:</b> EN RUTA (GPS Activo)`);
+
+      // Parada 3: CLI-003
+      L.marker(cli3Coords, { icon: makePin('#fde047', 'P3') }).addTo(leafletMap)
+        .bindPopup(`<b>📅 PARADA 3 · CLI-003 (ORD-003)</b><br><b>Cliente:</b> Andalusiática Renovables S.A.<br><b>Dirección:</b> P.I. La Ermita, C/ Pirita 8, Marbella<br><b>Ventana:</b> 09:00 - 11:00 H (ETA 11:30 H notificado)<br><b>Mercancía:</b> 6 Palés Inversores Solares (3.200 kg)<br><b>Vehículo:</b> VEC-02 (Ruta Consolidada 4.150 kg)<br><b>Estado:</b> PLANIFICADO`);
+
+      // Puntos 4, 5 y 6 (Larga Distancia)
+      L.marker(cli4Coords, { icon: makePin('#c084fc', 'P4') }).addTo(leafletMap)
+        .bindPopup(`<b>📅 ORD-004 · CLI-004 (Lugo, Galicia)</b><br>Infraestructuras y Redes del Norte S.A.<br>10 Palés Armarios y Cableado (5.100 kg)<br><b>Estado:</b> PLANIFICADO (VEC-04)`);
+
+      L.marker(cli5Coords, { icon: makePin('#c084fc', 'P5') }).addTo(leafletMap)
+        .bindPopup(`<b>📅 ORD-005 · CLI-005 (Frankfurt, Alemania)</b><br>EuroElectrical Components GmbH<br>12 Palés Componentes AT (4.800 kg)<br><b>Estado:</b> PLANIFICADO (VEC-05)`);
+
+      L.marker(cli6Coords, { icon: makePin('#c084fc', 'P6') }).addTo(leafletMap)
+        .bindPopup(`<b>📅 ORD-006 · CLI-006 (Oporto, Portugal)</b><br>Portuguesa de Transformadores S.A.<br>14 Palés Bobinas de Cobre (6.500 kg)<br><b>Estado:</b> PLANIFICADO (VEC-06)`);
+
+      // Polilínea Ruta Urbana VEC-01 (Verde)
+      L.polyline([baseCoords, cli1Coords], { color: '#10b981', weight: 4, dashArray: '6, 6' }).addTo(leafletMap);
+
+      // Polilínea Ruta Comarcal Consolidada VEC-02 (Azul Cian)
+      L.polyline([baseCoords, cli2Coords, cli3Coords, baseCoords], { color: '#0096c7', weight: 4 }).addTo(leafletMap);
+    }
+
+    function focusMapView(zone) {
+      if (!leafletMap) return;
+      if (zone === 'malaga') {
+        leafletMap.setView([36.64, -4.62], 10);
+      } else {
+        leafletMap.setView([43.5, -1.5], 5);
+      }
+    }
+
+    // Función auxiliar para incrustar iframes externos (Google Forms / Sheets / My Maps)
+    function embedCustomIframe(inputId, containerId) {
+      const url = document.getElementById(inputId).value.trim();
+      const container = document.getElementById(containerId);
+      if (!url) return;
+      container.classList.remove("hidden");
+      container.innerHTML = `<iframe src="${url}" class="w-full h-[480px] rounded-2xl border border-slate-300 shadow-inner" allowfullscreen loading="lazy"></iframe>`;
+    }
+
+    // Selector de Pestañas de la Matriz Tecnológica (Práctica 1)
+    function switchTechTab(techId) {
+      const panels = document.querySelectorAll('.tech-panel');
+      panels.forEach(p => p.classList.add('hidden'));
+
+      ['iot', 'blockchain', 'ai', 'bigdata'].forEach(b => {
+        const btn = document.getElementById('btn-' + b);
+        if (btn) {
+          btn.className = "px-5 py-3 rounded-xl font-bold text-sm bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 flex items-center gap-2 transition-all";
+        }
+      });
+
+      const activePanel = document.getElementById('panel-' + techId);
+      if (activePanel) activePanel.classList.remove('hidden');
+
+      const activeBtn = document.getElementById('btn-' + techId);
+      if (activeBtn) {
+        activeBtn.className = "px-5 py-3 rounded-xl font-bold text-sm bg-brand-navy text-white shadow-md flex items-center gap-2 transition-all";
+      }
+    }
+
+    // Simulador de Flota (Práctica 1 + 2)
+    function runSimulation() {
+      const cargo = document.getElementById('simCargo').value;
+      const destination = document.getElementById('simDestination').value;
+      
+      const vehicleName = document.getElementById('simVehicleName');
+      const vehicleDesc = document.getElementById('simVehicleDesc');
+      const vehicleIcon = document.getElementById('simVehicleIcon');
+      const justification = document.getElementById('simJustification');
+      const tagBadge = document.getElementById('simTagBadge');
+      const gForce = document.getElementById('simGForce');
+      const humidity = document.getElementById('simHumidity');
+      const eta = document.getElementById('simEta');
+
+      if (destination === 'malaga_centro' || cargo === 'recambios') {
+        vehicleName.innerText = "VEC-01: Iveco eDaily Eléctrica (4821 LZX)";
+        vehicleDesc.innerText = "Tara: 2.250 kg | MMA: 3.500 kg | Carga Útil: 1.250 kg | 4-5 Europalés (12 m³)";
+        vehicleIcon.innerHTML = '<i class="fa-solid fa-van-shuttle"></i>';
+        tagBadge.innerText = "DISTINTIVO CERO EMISIONES";
+        tagBadge.className = "text-xs px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30";
+        justification.innerText = "Asignado a ORD-001 (280 kg, 22,40% de carga útil) para acceso exclusivo a la ZBE de Calle Carretería sin superar los 3.500 kg de MMA.";
+        gForce.innerText = "0.12 g";
+        humidity.innerText = "38 %";
+        eta.innerText = "14 min";
+      } else if (cargo === 'cuadros' || destination === 'puerto_marbella') {
+        vehicleName.innerText = "VEC-02: Mercedes-Benz Atego 1224 (9102 KVB)";
+        vehicleDesc.innerText = "Tara: 5.400 kg | MMA: 12.000 kg | Carga Útil: 6.600 kg | 14-16 Europalés (38 m³)";
+        vehicleIcon.innerHTML = '<i class="fa-solid fa-truck"></i>';
+        tagBadge.innerText = "CONSOLIDACIÓN 62,88%";
+        tagBadge.className = "text-xs px-2.5 py-1 rounded bg-sky-500/20 text-sky-300 font-mono border border-sky-500/30";
+        justification.innerText = "Consolida ORD-002 (950 kg) + ORD-003 (3.200 kg) = 4.150 kg y 9 palés, aprovechando su plataforma elevadora de 1.500 kg en el Puerto de Málaga.";
+        gForce.innerText = "0.19 g";
+        humidity.innerText = "42 %";
+        eta.innerText = "32 min";
+      } else {
+        vehicleName.innerText = "VEC-03: Volvo FL 250 Tauliner (3341 MHT)";
+        vehicleDesc.innerText = "Tara: 7.200 kg | MMA: 18.000 kg | Carga Útil: 10.800 kg | 18-20 Europalés (48 m³)";
+        vehicleIcon.innerHTML = '<i class="fa-solid fa-truck-moving"></i>';
+        tagBadge.innerText = "GRAN TONELAJE PESADO";
+        tagBadge.className = "text-xs px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-300 font-mono border border-indigo-500/30";
+        justification.innerText = "Asignado para bobinas pesadas y transformadores regionales hasta 10.800 kg con carga lateral mediante puente grúa o carretilla.";
+        gForce.innerText = "0.22 g";
+        humidity.innerText = "45 %";
+        eta.innerText = "48 min";
+      }
+    }
+
+    // Menú Móvil
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileBtn && mobileMenu) {
+      mobileBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+
+    // Inicializar al cargar la página
+    window.addEventListener('DOMContentLoaded', () => {
+      renderOrdersTable();
+      runSimulation();
+    });
+  </script>
+</body>
+</html>
