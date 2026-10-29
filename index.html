@@ -2249,7 +2249,8 @@ L.polyline([baseCoords, cli6Coords], { color: '#c084fc', weight: 3, dashArray: '
       <p><strong>Mercancía:</strong> 10 palés - Armarios Metálicos y Cableado</p>
       <p><strong>Peso:</strong> 5.100 kg</p>
       <p><strong>Vehículo:</strong> Mercedes Atego 1224 (VEC-02)</p>
-      <p class="text-brand-blue font-bold mt-2">ESTADO: Planificado (Ruta RT-NAC-2)</p>
+      <p class="text-brand-blue font-bold mt-2 mb-3">ESTADO: Planificado (Ruta RT-NAC-2)</p>
+      <a href="./Pedido_Lugo.pdf.pdf" target="_blank" class="block text-center w-full py-2 bg-brand-navy hover:bg-brand-blue text-white rounded text-xs font-bold transition-all"><i class="fa-solid fa-download mr-1"></i> Descargar Pedido Real (PDF)</a>
     `;
     
     porteTitle.innerHTML = `<i class="fa-solid fa-truck-fast mr-1"></i> Carta de Porte Nac.`;
@@ -2258,19 +2259,21 @@ L.polyline([baseCoords, cli6Coords], { color: '#c084fc', weight: 3, dashArray: '
       <p><strong>Porteador:</strong> ElectroLogística Sur S.L.</p>
       <p><strong>Matrícula:</strong> 9102 KVB</p>
       <p><strong>Masa Bruta:</strong> 5.100 kg</p>
-      <div class="mt-2 p-1.5 bg-slate-100 rounded border border-slate-200">
+      <div class="mt-2 p-1.5 bg-slate-100 rounded border border-slate-200 mb-3">
         <p class="text-[9px] text-slate-400">Firma Biométrica Digital:</p>
         <p class="font-[cursive] text-lg text-slate-800">C. Delgado</p>
       </div>
+      <a href="./CartaPorte_Lugo.pdf.pdf" target="_blank" class="block text-center w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs font-bold transition-all"><i class="fa-solid fa-download mr-1"></i> Descargar Carta de Porte (PDF)</a>
     `;
 
     facturaContent.innerHTML = `
       <p><strong>Factura Nº:</strong> F-2026-104</p>
       <p><strong>Base Imponible:</strong> 1.250,00 €</p>
       <p><strong>IVA (21%):</strong> 262,50 €</p>
-      <div class="mt-2 pt-2 border-t border-slate-300">
+      <div class="mt-2 pt-2 border-t border-slate-300 mb-3">
         <p class="font-bold text-slate-800 text-xs">TOTAL: 1.512,50 €</p>
       </div>
+      <a href="./Factura_Lugo.pdf.pdf" target="_blank" class="block text-center w-full py-2 bg-amber-600 hover:bg-amber-700 text-white rounded text-xs font-bold transition-all"><i class="fa-solid fa-download mr-1"></i> Descargar Factura (PDF)</a>
     `;
 
   } else if (destino === 'oporto') {
@@ -2281,7 +2284,8 @@ L.polyline([baseCoords, cli6Coords], { color: '#c084fc', weight: 3, dashArray: '
       <p><strong>Mercancía:</strong> 14 palés - Bobinas de Cobre</p>
       <p><strong>Peso:</strong> 6.500 kg</p>
       <p><strong>Vehículo:</strong> Volvo FL Tauliner (VEC-03)</p>
-      <p class="text-brand-blue font-bold mt-2">ESTADO: Planificado (Ruta RT-INT-3)</p>
+      <p class="text-brand-blue font-bold mt-2 mb-3">ESTADO: Planificado (Ruta RT-INT-3)</p>
+      <a href="./Pedido_Oporto.pdf.pdf" target="_blank" class="block text-center w-full py-2 bg-brand-navy hover:bg-brand-blue text-white rounded text-xs font-bold transition-all"><i class="fa-solid fa-download mr-1"></i> Descargar Pedido Real (PDF)</a>
     `;
     
     porteTitle.innerHTML = `<i class="fa-solid fa-link mr-1"></i> e-CMR (Intl.)`;
@@ -2290,19 +2294,21 @@ L.polyline([baseCoords, cli6Coords], { color: '#c084fc', weight: 3, dashArray: '
       <p><strong>Porteador:</strong> ElectroLogística Sur S.L.</p>
       <p><strong>Matrícula:</strong> 3341 MHT</p>
       <p><strong>Masa Bruta:</strong> 6.500 kg</p>
-      <div class="mt-2 p-1.5 bg-emerald-50 rounded border border-emerald-200 text-emerald-800">
+      <div class="mt-2 p-1.5 bg-emerald-50 rounded border border-emerald-200 text-emerald-800 mb-3">
         <p class="text-[9px] font-bold">REGISTRO BLOCKCHAIN HASH:</p>
         <p class="text-[10px] break-all">0x8A4B29F7C12...</p>
       </div>
+      <a href="./eCMR_Oporto.pdf.pdf" target="_blank" class="block text-center w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs font-bold transition-all"><i class="fa-solid fa-download mr-1"></i> Descargar e-CMR Digital (PDF)</a>
     `;
 
     facturaContent.innerHTML = `
       <p><strong>Factura Nº:</strong> F-2026-105</p>
       <p><strong>Base Imponible:</strong> 1.850,00 €</p>
       <p class="text-amber-600 font-bold text-[9px]">IVA 0% (Entrega Intracomunitaria)</p>
-      <div class="mt-2 pt-2 border-t border-slate-300">
+      <div class="mt-2 pt-2 border-t border-slate-300 mb-3">
         <p class="font-bold text-slate-800 text-xs">TOTAL: 1.850,00 €</p>
       </div>
+      <a href="./Factura_Oporto.pdf.pdf" target="_blank" class="block text-center w-full py-2 bg-amber-600 hover:bg-amber-700 text-white rounded text-xs font-bold transition-all"><i class="fa-solid fa-download mr-1"></i> Descargar Factura (PDF)</a>
     `;
   }
 }
