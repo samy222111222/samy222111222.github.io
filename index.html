@@ -2106,51 +2106,60 @@
     }
 
     // Simulador de Flota (Práctica 1 + 2)
-    function runSimulation() {
-      const cargo = document.getElementById('simCargo').value;
-      const destination = document.getElementById('simDestination').value;
-      
-      const vehicleName = document.getElementById('simVehicleName');
-      const vehicleDesc = document.getElementById('simVehicleDesc');
-      const vehicleIcon = document.getElementById('simVehicleIcon');
-      const justification = document.getElementById('simJustification');
-      const tagBadge = document.getElementById('simTagBadge');
-      const gForce = document.getElementById('simGForce');
-      const humidity = document.getElementById('simHumidity');
-      const eta = document.getElementById('simEta');
+   function runSimulation() {
+  const cargo = document.getElementById('simCargo').value;
+  const destination = document.getElementById('simDestination').value;
+  
+  const vehicleName = document.getElementById('simVehicleName');
+  const vehicleDesc = document.getElementById('simVehicleDesc');
+  const vehicleIcon = document.getElementById('simVehicleIcon');
+  const justification = document.getElementById('simJustification');
+  const tagBadge = document.getElementById('simTagBadge');
+  const gForce = document.getElementById('simGForce');
+  const humidity = document.getElementById('simHumidity');
+  const eta = document.getElementById('simEta');
+  const energyState = document.getElementById('simEnergyState');
+  const ecmr = document.getElementById('simEcmr'); // Asegúrate de tener este ID en tu HTML o usa una variable general
 
-      if (destination === 'malaga_centro' || cargo === 'recambios') {
-        vehicleName.innerText = "VEC-01: Iveco eDaily Eléctrica (4821 LZX)";
-        vehicleDesc.innerText = "Tara: 2.250 kg | MMA: 3.500 kg | Carga Útil: 1.250 kg | 4-5 Europalés (12 m³)";
-        vehicleIcon.innerHTML = '<i class="fa-solid fa-van-shuttle"></i>';
-        tagBadge.innerText = "DISTINTIVO CERO EMISIONES";
-        tagBadge.className = "text-xs px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30";
-        justification.innerText = "Asignado a ORD-001 (280 kg, 22,40% de carga útil) para acceso exclusivo a la ZBE de Calle Carretería sin superar los 3.500 kg de MMA.";
-        gForce.innerText = "0.12 g";
-        humidity.innerText = "38 %";
-        eta.innerText = "14 min";
-      } else if (cargo === 'cuadros' || destination === 'puerto_marbella') {
-        vehicleName.innerText = "VEC-02: Mercedes-Benz Atego 1224 (9102 KVB)";
-        vehicleDesc.innerText = "Tara: 5.400 kg | MMA: 12.000 kg | Carga Útil: 6.600 kg | 14-16 Europalés (38 m³)";
-        vehicleIcon.innerHTML = '<i class="fa-solid fa-truck"></i>';
-        tagBadge.innerText = "CONSOLIDACIÓN 62,88%";
-        tagBadge.className = "text-xs px-2.5 py-1 rounded bg-sky-500/20 text-sky-300 font-mono border border-sky-500/30";
-        justification.innerText = "Consolida ORD-002 (950 kg) + ORD-003 (3.200 kg) = 4.150 kg y 9 palés, aprovechando su plataforma elevadora de 1.500 kg en el Puerto de Málaga.";
-        gForce.innerText = "0.19 g";
-        humidity.innerText = "42 %";
-        eta.innerText = "32 min";
-      } else {
-        vehicleName.innerText = "VEC-03: Volvo FL 250 Tauliner (3341 MHT)";
-        vehicleDesc.innerText = "Tara: 7.200 kg | MMA: 18.000 kg | Carga Útil: 10.800 kg | 18-20 Europalés (48 m³)";
-        vehicleIcon.innerHTML = '<i class="fa-solid fa-truck-moving"></i>';
-        tagBadge.innerText = "GRAN TONELAJE PESADO";
-        tagBadge.className = "text-xs px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-300 font-mono border border-indigo-500/30";
-        justification.innerText = "Asignado para bobinas pesadas y transformadores regionales hasta 10.800 kg con carga lateral mediante puente grúa o carretilla.";
-        gForce.innerText = "0.22 g";
-        humidity.innerText = "45 %";
-        eta.innerText = "48 min";
-      }
-    }
+  if (destination === 'malaga_centro' || cargo === 'recambios') {
+    vehicleName.innerText = "Vehículo 1: Iveco eDaily Eléctrica (100% CERO)";
+    vehicleDesc.innerText = "Tara: 2.250 kg | MMA: 3.500 kg | Carga Útil: 1.250 kg";
+    vehicleIcon.innerHTML = '<i class="fa-solid fa-van-shuttle"></i>';
+    tagBadge.innerText = "DISTINTIVO CERO EMISIONES";
+    justification.innerText = "Seleccionada por cumplimiento estricto de la Zona de Bajas Emisiones (ZBE) del centro de Málaga.";
+    gForce.innerText = "0.12 g";
+    eta.innerText = "14 min";
+    
+  } else if (destination === 'lugo') {
+    // NUEVO: SIMULACIÓN LUGO (NACIONAL)
+    vehicleName.innerText = "Vehículo 2: Mercedes Atego 1224 (Plataforma)";
+    vehicleDesc.innerText = "ORD-004 | 10 palés (5.100 kg) | Carga Útil Max: 6.600 kg";
+    vehicleIcon.innerHTML = '<i class="fa-solid fa-truck"></i>';
+    tagBadge.innerText = "RUTA NACIONAL (A-66)";
+    justification.innerText = "Asignado por capacidad de carga ideal y plataforma para descarga autónoma en destino nacional (Galicia). Documento: Carta de Porte Nacional.";
+    gForce.innerText = "0.15 g";
+    eta.innerText = "12 horas";
+
+  } else if (destination === 'oporto') {
+    // NUEVO: SIMULACIÓN OPORTO (INTERNACIONAL)
+    vehicleName.innerText = "Vehículo 3: Volvo FL 250 (Tauliner Lona)";
+    vehicleDesc.innerText = "ORD-006 | 14 palés bobinas (6.500 kg) | Carga Útil Max: 10.800 kg";
+    vehicleIcon.innerHTML = '<i class="fa-solid fa-truck-moving"></i>';
+    tagBadge.innerText = "RUTA INTERNACIONAL";
+    justification.innerText = "Asignado por gran tonelaje y lona lateral para bobinas. Documento: e-CMR Internacional Blockchain activado para cruzar la frontera sin demoras.";
+    gForce.innerText = "0.20 g";
+    eta.innerText = "24 horas";
+    
+  } else {
+    // Caso por defecto (Polígono)
+    vehicleName.innerText = "Vehículo 2: Mercedes-Benz Atego 1224";
+    vehicleDesc.innerText = "Tara: 5.400 kg | Carga Útil: 6.600 kg";
+    vehicleIcon.innerHTML = '<i class="fa-solid fa-truck"></i>';
+    tagBadge.innerText = "DISTINTIVO ECO / EURO 6";
+    justification.innerText = "Caja cerrada rígida ideal para la protección de armarios eléctricos.";
+    eta.innerText = "32 min";
+  }
+}
 
     // Menú Móvil
     const mobileBtn = document.getElementById('mobileMenuBtn');
