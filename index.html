@@ -587,6 +587,55 @@
             </table>
           </div>
         </div>
+        <!-- MÓDULO DE DIGITALIZACIÓN DE DOCUMENTOS (PEDIDO, CMR, FACTURA) -->
+<div class="mt-8 bg-slate-900 rounded-2xl p-6 border border-slate-800 text-white">
+  <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
+    <h4 class="text-lg font-bold text-brand-cyan flex items-center gap-2">
+      <i class="fa-solid fa-file-invoice"></i> Archivo Documental Digital (Paperless TMS)
+    </h4>
+    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">100% DIGITAL</span>
+  </div>
+  
+  <p class="text-xs text-slate-400 mb-4">Seleccione una orden para visualizar los documentos generados automáticamente por el ERP/TMS.</p>
+  
+  <div class="flex gap-3 mb-6">
+    <button onclick="showDigitalDocs('lugo')" class="px-4 py-2 bg-brand-navy hover:bg-brand-blue border border-brand-cyan/30 rounded-lg text-xs font-bold transition-all">
+      <i class="fa-solid fa-box mr-1"></i> Ver Documentos ORD-004 (Lugo)
+    </button>
+    <button onclick="showDigitalDocs('oporto')" class="px-4 py-2 bg-brand-navy hover:bg-brand-blue border border-brand-cyan/30 rounded-lg text-xs font-bold transition-all">
+      <i class="fa-solid fa-globe mr-1"></i> Ver Documentos ORD-006 (Oporto)
+    </button>
+  </div>
+
+  <div id="digitalDocsContainer" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4">
+    <!-- Pedido -->
+    <div class="bg-white text-slate-800 rounded-xl p-4 shadow-lg border-t-4 border-t-brand-blue">
+      <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
+        <span class="font-bold text-sm text-brand-navy"><i class="fa-solid fa-clipboard-list mr-1"></i> Pedido TMS</span>
+        <span id="docPedidoId" class="text-xs font-mono bg-slate-100 px-1.5 rounded">ORD-XXX</span>
+      </div>
+      <div id="docPedidoContent" class="text-[11px] font-mono space-y-1.5 text-slate-600"></div>
+    </div>
+    
+    <!-- Carta de Porte / e-CMR -->
+    <div class="bg-white text-slate-800 rounded-xl p-4 shadow-lg border-t-4 border-t-emerald-500">
+      <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
+        <span id="docPorteTitle" class="font-bold text-sm text-emerald-700"><i class="fa-solid fa-truck-fast mr-1"></i> Carta de Porte</span>
+        <span class="text-xs font-mono bg-emerald-50 text-emerald-600 px-1.5 rounded"><i class="fa-solid fa-signature"></i> Firmado</span>
+      </div>
+      <div id="docPorteContent" class="text-[11px] font-mono space-y-1.5 text-slate-600"></div>
+    </div>
+    
+    <!-- Factura -->
+    <div class="bg-white text-slate-800 rounded-xl p-4 shadow-lg border-t-4 border-t-amber-500">
+      <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
+        <span class="font-bold text-sm text-amber-700"><i class="fa-solid fa-file-invoice-dollar mr-1"></i> Factura</span>
+        <span class="text-xs font-mono bg-amber-50 text-amber-600 px-1.5 rounded">Emitida</span>
+      </div>
+      <div id="docFacturaContent" class="text-[11px] font-mono space-y-1.5 text-slate-600"></div>
+    </div>
+  </div>
+</div>
 
         <!-- TABLA 1: CLIENTES B2B -->
         <div class="space-y-4 pt-4 border-t border-slate-200">
@@ -2182,6 +2231,81 @@ L.polyline([baseCoords, cli6Coords], { color: '#c084fc', weight: 3, dashArray: '
       renderOrdersTable();
       runSimulation();
     });
+    function showDigitalDocs(destino) {
+  const container = document.getElementById('digitalDocsContainer');
+  const pedidoId = document.getElementById('docPedidoId');
+  const pedidoContent = document.getElementById('docPedidoContent');
+  const porteTitle = document.getElementById('docPorteTitle');
+  const porteContent = document.getElementById('docPorteContent');
+  const facturaContent = document.getElementById('docFacturaContent');
+
+  container.classList.remove('hidden');
+
+  if (destino === 'lugo') {
+    pedidoId.innerText = "ORD-004";
+    pedidoContent.innerHTML = `
+      <p><strong>Cliente:</strong> Infraestructuras y Redes del Norte S.A.</p>
+      <p><strong>Destino:</strong> Lugo (Galicia)</p>
+      <p><strong>Mercancía:</strong> 10 palés - Armarios Metálicos y Cableado</p>
+      <p><strong>Peso:</strong> 5.100 kg</p>
+      <p><strong>Vehículo:</strong> Mercedes Atego 1224 (VEC-02)</p>
+      <p class="text-brand-blue font-bold mt-2">ESTADO: Planificado (Ruta RT-NAC-2)</p>
+    `;
+    
+    porteTitle.innerHTML = `<i class="fa-solid fa-truck-fast mr-1"></i> Carta de Porte Nac.`;
+    porteContent.innerHTML = `
+      <p><strong>Documento de Control:</strong> FOM/2861/2012</p>
+      <p><strong>Porteador:</strong> ElectroLogística Sur S.L.</p>
+      <p><strong>Matrícula:</strong> 9102 KVB</p>
+      <p><strong>Masa Bruta:</strong> 5.100 kg</p>
+      <div class="mt-2 p-1.5 bg-slate-100 rounded border border-slate-200">
+        <p class="text-[9px] text-slate-400">Firma Biométrica Digital:</p>
+        <p class="font-[cursive] text-lg text-slate-800">C. Delgado</p>
+      </div>
+    `;
+
+    facturaContent.innerHTML = `
+      <p><strong>Factura Nº:</strong> F-2026-104</p>
+      <p><strong>Base Imponible:</strong> 1.250,00 €</p>
+      <p><strong>IVA (21%):</strong> 262,50 €</p>
+      <div class="mt-2 pt-2 border-t border-slate-300">
+        <p class="font-bold text-slate-800 text-xs">TOTAL: 1.512,50 €</p>
+      </div>
+    `;
+
+  } else if (destino === 'oporto') {
+    pedidoId.innerText = "ORD-006";
+    pedidoContent.innerHTML = `
+      <p><strong>Cliente:</strong> Portuguesa de Transformadores S.A.</p>
+      <p><strong>Destino:</strong> Oporto (Portugal)</p>
+      <p><strong>Mercancía:</strong> 14 palés - Bobinas de Cobre</p>
+      <p><strong>Peso:</strong> 6.500 kg</p>
+      <p><strong>Vehículo:</strong> Volvo FL Tauliner (VEC-03)</p>
+      <p class="text-brand-blue font-bold mt-2">ESTADO: Planificado (Ruta RT-INT-3)</p>
+    `;
+    
+    porteTitle.innerHTML = `<i class="fa-solid fa-link mr-1"></i> e-CMR (Intl.)`;
+    porteContent.innerHTML = `
+      <p><strong>Convención CMR Internacional</strong></p>
+      <p><strong>Porteador:</strong> ElectroLogística Sur S.L.</p>
+      <p><strong>Matrícula:</strong> 3341 MHT</p>
+      <p><strong>Masa Bruta:</strong> 6.500 kg</p>
+      <div class="mt-2 p-1.5 bg-emerald-50 rounded border border-emerald-200 text-emerald-800">
+        <p class="text-[9px] font-bold">REGISTRO BLOCKCHAIN HASH:</p>
+        <p class="text-[10px] break-all">0x8A4B29F7C12...</p>
+      </div>
+    `;
+
+    facturaContent.innerHTML = `
+      <p><strong>Factura Nº:</strong> F-2026-105</p>
+      <p><strong>Base Imponible:</strong> 1.850,00 €</p>
+      <p class="text-amber-600 font-bold text-[9px]">IVA 0% (Entrega Intracomunitaria)</p>
+      <div class="mt-2 pt-2 border-t border-slate-300">
+        <p class="font-bold text-slate-800 text-xs">TOTAL: 1.850,00 €</p>
+      </div>
+    `;
+  }
+}
   </script>
 </body>
 </html>
