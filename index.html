@@ -2064,6 +2064,11 @@
 
       // Polilínea Ruta Comarcal Consolidada VEC-02 (Azul Cian)
       L.polyline([baseCoords, cli2Coords, cli3Coords, baseCoords], { color: '#0096c7', weight: 4 }).addTo(leafletMap);
+      // Ruta Nacional a Lugo (Morado punteado)
+L.polyline([baseCoords, cli4Coords], { color: '#c084fc', weight: 3, dashArray: '8, 8' }).addTo(leafletMap);
+
+// Ruta Internacional a Oporto (Morado punteado)
+L.polyline([baseCoords, cli6Coords], { color: '#c084fc', weight: 3, dashArray: '8, 8' }).addTo(leafletMap);
     }
 
     function focusMapView(zone) {
@@ -2116,10 +2121,7 @@
   const justification = document.getElementById('simJustification');
   const tagBadge = document.getElementById('simTagBadge');
   const gForce = document.getElementById('simGForce');
-  const humidity = document.getElementById('simHumidity');
   const eta = document.getElementById('simEta');
-  const energyState = document.getElementById('simEnergyState');
-  const ecmr = document.getElementById('simEcmr'); // Asegúrate de tener este ID en tu HTML o usa una variable general
 
   if (destination === 'malaga_centro' || cargo === 'recambios') {
     vehicleName.innerText = "Vehículo 1: Iveco eDaily Eléctrica (100% CERO)";
@@ -2129,9 +2131,10 @@
     justification.innerText = "Seleccionada por cumplimiento estricto de la Zona de Bajas Emisiones (ZBE) del centro de Málaga.";
     gForce.innerText = "0.12 g";
     eta.innerText = "14 min";
-    
+    // Mueve el mapa a Málaga
+    if (leafletMap) leafletMap.setView([36.72, -4.42], 12); 
+
   } else if (destination === 'lugo') {
-    // NUEVO: SIMULACIÓN LUGO (NACIONAL)
     vehicleName.innerText = "Vehículo 2: Mercedes Atego 1224 (Plataforma)";
     vehicleDesc.innerText = "ORD-004 | 10 palés (5.100 kg) | Carga Útil Max: 6.600 kg";
     vehicleIcon.innerHTML = '<i class="fa-solid fa-truck"></i>';
@@ -2139,9 +2142,10 @@
     justification.innerText = "Asignado por capacidad de carga ideal y plataforma para descarga autónoma en destino nacional (Galicia). Documento: Carta de Porte Nacional.";
     gForce.innerText = "0.15 g";
     eta.innerText = "12 horas";
+    // Vuela el mapa a Lugo
+    if (leafletMap) leafletMap.flyTo([43.0330, -7.5560], 7, {duration: 1.5});
 
   } else if (destination === 'oporto') {
-    // NUEVO: SIMULACIÓN OPORTO (INTERNACIONAL)
     vehicleName.innerText = "Vehículo 3: Volvo FL 250 (Tauliner Lona)";
     vehicleDesc.innerText = "ORD-006 | 14 palés bobinas (6.500 kg) | Carga Útil Max: 10.800 kg";
     vehicleIcon.innerHTML = '<i class="fa-solid fa-truck-moving"></i>';
@@ -2149,15 +2153,18 @@
     justification.innerText = "Asignado por gran tonelaje y lona lateral para bobinas. Documento: e-CMR Internacional Blockchain activado para cruzar la frontera sin demoras.";
     gForce.innerText = "0.20 g";
     eta.innerText = "24 horas";
+    // Vuela el mapa a Oporto
+    if (leafletMap) leafletMap.flyTo([41.1150, -8.6320], 7, {duration: 1.5});
     
   } else {
-    // Caso por defecto (Polígono)
     vehicleName.innerText = "Vehículo 2: Mercedes-Benz Atego 1224";
     vehicleDesc.innerText = "Tara: 5.400 kg | Carga Útil: 6.600 kg";
     vehicleIcon.innerHTML = '<i class="fa-solid fa-truck"></i>';
     tagBadge.innerText = "DISTINTIVO ECO / EURO 6";
     justification.innerText = "Caja cerrada rígida ideal para la protección de armarios eléctricos.";
     eta.innerText = "32 min";
+    // Mueve el mapa al Polígono de Málaga
+    if (leafletMap) leafletMap.setView([36.64, -4.62], 10);
   }
 }
 
